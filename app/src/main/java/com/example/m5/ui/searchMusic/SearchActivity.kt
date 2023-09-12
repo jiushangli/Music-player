@@ -15,6 +15,7 @@ import com.example.m5.R
 import com.example.m5.databinding.ActivitySearchBinding
 import com.example.m5.logic.model.Data
 import com.example.m5.ui.player.PlayMusicViewModel
+import java.util.Collections
 
 
 class SearchActivity : AppCompatActivity() {
@@ -96,6 +97,7 @@ class SearchActivity : AppCompatActivity() {
         //监听
         viewModel.musicliveData.observe(this, Observer { result->
             val songs = result.getOrNull()
+            Collections.reverse(songs)
             if (songs != null){
                 viewModel.musicList.clear()
                 viewModel.musicList.addAll(songs)

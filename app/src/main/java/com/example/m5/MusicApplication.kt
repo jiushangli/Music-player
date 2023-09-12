@@ -5,6 +5,7 @@ import android.content.Context
 
 class MusicApplication: Application() {
 
+    // 你好
     companion object{
         lateinit var context: Context
         const val TOKEN = ""
