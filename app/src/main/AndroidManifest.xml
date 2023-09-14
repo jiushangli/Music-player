@@ -38,12 +38,17 @@
         android:fullBackupContent="@xml/backup_rules"
         android:icon="@mipmap/maple_launch"
         android:label="@string/app_name"
+        android:networkSecurityConfig="@xml/network_config"
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/maple_launch"
         android:supportsRtl="true"
         android:theme="@style/splash_screen"
-        android:networkSecurityConfig="@xml/network_config"
         tools:targetApi="31">
+        <service
+            android:name=".ui.player.MusicPlayService"
+            android:enabled="true"
+            android:exported="true"></service>
+
         <activity
             android:name=".activity.AboutActivity"
             android:exported="false"
@@ -79,22 +84,16 @@
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.NetEaseCloudMusic.NcActivity"
             android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
-
+            tools:ignore="LockedOrientationActivity"></activity>
         <activity
             android:name=".ui.searchMusic.SearchActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
-
-
         <activity
             android:name=".activity.PlayerActivity"
             android:exported="true"

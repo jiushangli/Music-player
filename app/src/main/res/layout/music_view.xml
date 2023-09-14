@@ -1,54 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?><!--<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="50dp"
-    android:layout_marginBottom="5dp"
-    android:padding="2dp">
-
-    <com.google.android.material.imageview.ShapeableImageView
-        android:id="@+id/imageMV"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="5dp"
-        android:src="@drawable/moni2"
-        app:shapeAppearanceOverlay="@style/curved_photo" />
-
-    <TextView
-        android:id="@+id/songNameMV"
-        android:layout_width="wrap_content"
-        android:layout_height="25dp"
-        android:layout_marginStart="5dp"
-        android:layout_toStartOf="@+id/more_action"
-        android:layout_toEndOf="@id/imageMV"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/song_name"
-        android:textColor="@color/black"
-        android:textStyle="bold" />
-
-    <TextView
-        android:id="@+id/songAlbumMV"
-        android:layout_width="wrap_content"
-        android:layout_height="18dp"
-        android:layout_marginStart="5dp"
-        android:layout_marginTop="24dp"
-        android:layout_toStartOf="@+id/more_action"
-        android:layout_toEndOf="@id/imageMV"
-        android:gravity="center_vertical"
-        android:singleLine="true"
-        android:text="@string/song_album"
-        android:textSize="12sp"
-        android:textStyle="bold" />
-
-    <ImageButton
-        android:id="@+id/more_action"
-        android:layout_width="40dp"
-        android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
-        android:background="?attr/selectableItemBackground"
-        android:src="@drawable/more_icon" />
-</RelativeLayout>-->
+<?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -59,7 +9,6 @@
     android:layout_marginBottom="1dp"
     android:clickable="true"
     android:focusable="true"
-
     android:minHeight="?attr/listPreferredItemHeight"
     android:orientation="horizontal"
     tools:ignore="MissingPrefix">
@@ -97,11 +46,9 @@
         android:id="@+id/songNameMV"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_margin="3dp"
         android:ellipsize="end"
         android:maxLines="1"
-
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="15dp"
         android:textAppearance="@style/TextViewSubtitle1"
         android:textColor="?android:attr/textColorPrimary"
         app:layout_constraintBottom_toTopOf="@+id/artistMV"
@@ -118,7 +65,7 @@
         android:layout_height="wrap_content"
         android:ellipsize="end"
         android:maxLines="1"
-        android:paddingHorizontal="12dp"
+        android:paddingHorizontal="16dp"
         android:textAppearance="@style/TextViewBody2"
         android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
