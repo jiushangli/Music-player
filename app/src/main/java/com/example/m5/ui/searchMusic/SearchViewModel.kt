@@ -8,25 +8,25 @@ import com.example.m5.logic.model.Song
 
 class SearchViewModel: ViewModel() {
 
-    private val getUriliveData = MutableLiveData<Pair<Long, String>>()
-    private val searchliveData = MutableLiveData<String>()
+    private val getUriLiveData = MutableLiveData<Pair<Long, String>>()
+    private val searchLiveData = MutableLiveData<String>()
 
     val musicList = ArrayList<Song>()
 
-    val musicliveData = Transformations.switchMap(searchliveData){ query->
+    val musicLiveData = Transformations.switchMap(searchLiveData){ query->
         Repository.searchMusic(query)
     }
 
-    val uriliveData = Transformations.switchMap(getUriliveData){pair->
+    val uriLiveData = Transformations.switchMap(getUriLiveData){pair->
         Repository.getUri(pair.first, pair.second)
     }
 
     fun searchMusic(query: String){
-        searchliveData.value = query
+        searchLiveData.value = query
     }
 
     fun getUri(pair: Pair<Long, String>){
-        getUriliveData.value = pair
+        getUriLiveData.value = pair
     }
 
 

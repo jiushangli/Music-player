@@ -8,7 +8,6 @@ import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
@@ -16,10 +15,9 @@ import com.example.m5.databinding.ActivitySearchBinding
 import com.example.m5.logic.model.Data
 import com.example.m5.ui.player.PlayMusicViewModel
 
-
 class SearchActivity : AppCompatActivity() {
 
-    val viewModel by lazy { ViewModelProvider(this).get(SearchViewModel::class.java) }
+    val viewModel by lazy { ViewModelProvider(this)[SearchViewModel::class.java] }
     private lateinit var binding: ActivitySearchBinding
 
     private lateinit var adapterMusicList: SearchMusicAdapter
@@ -72,7 +70,7 @@ class SearchActivity : AppCompatActivity() {
         }
 
         //监听
-        viewModel.musicliveData.observe(this, Observer { result->
+        viewModel.musicLiveData.observe(this){ result->
             val songs = result.getOrNull()
             songs?.reversed()
             if (songs != null){
@@ -81,19 +79,18 @@ class SearchActivity : AppCompatActivity() {
                 binding.showMusic.visibility = View.VISIBLE
                 adapterMusicList.notifyDataSetChanged()
             }
-        })
+        }
 
-        viewModel.uriliveData.observe(this, Observer { result->
+        viewModel.uriLiveData.observe(this) { result->
             val song: Data? = (result as Result<Data>).getOrNull()
             Log.d("hucheng", "返回内容${song.toString()}")
             song?.let { noNullSong->
                 Log.d("hucheng", "准备播放")
-
-                //                添加音乐到列表
                 PlayMusicViewModel.position++
                 PlayMusicViewModel.musicList.add(PlayMusicViewModel.position, noNullSong)
                 Log.d("hucheng", "musicLists: ${PlayMusicViewModel.musicList[PlayMusicViewModel.position].toString()}")
             }
-        })
+        }
+
     }
 }
