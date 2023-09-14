@@ -52,6 +52,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -219,7 +220,6 @@ class MainActivity : AppCompatActivity() {
 
         // 将 musicAdapter 设置为 musicRV 的适配器
         binding.musicRV.adapter = musicAdapter
-//        binding.totalSongs.text = "共" + musicAdapter.itemCount + "首"
     }
 
     //获取音乐列表的函数,查询本地音乐并且返回一个列表

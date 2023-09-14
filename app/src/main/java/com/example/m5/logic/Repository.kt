@@ -36,7 +36,7 @@ object Repository {
         val result = try {
             val musicResponse = MusicNetwork.getUri(id, level)
             if(musicResponse.code == "200"){
-                val song = musicResponse.data.get(0)
+                val song = musicResponse.data[0]
                 Result.success(song)
             }else{
                 Result.failure(RuntimeException(

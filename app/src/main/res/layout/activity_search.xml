@@ -4,55 +4,56 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.searchMusic.SearchActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.searchMusic.SearchActivity">
 
 
     <RelativeLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
 
-        <include layout="@layout/toolbar"
-            android:id="@+id/toolbarsearch"/>
+        <include
+            android:id="@+id/toolbarSearch"
+            layout="@layout/toolbar" />
 
         <androidx.recyclerview.widget.RecyclerView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbarsearch"
             android:id="@+id/showMusic"
-            android:visibility="gone"/>
-
-
-        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/toolbarsearch"
-            android:orientation="vertical"
-            android:id="@+id/show"/>
+            android:layout_below="@+id/toolbarSearch"
+            android:visibility="gone" />
+
 
         <LinearLayout
+            android:id="@+id/show"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/toolbarSearch"
+            android:orientation="vertical" />
+
+        <LinearLayout
+            android:id="@+id/history"
             android:layout_width="match_parent"
             android:layout_height="200dp"
-            android:orientation="vertical"
-            android:layout_below="@+id/toolbarsearch"
-            android:id="@+id/history">
+            android:layout_below="@+id/toolbarSearch"
+            android:orientation="vertical">
 
-<!--            <com.zhy.view.flowlayout.FlowLayout-->
-<!--                android:id="@+id/flowlayout"-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="wrap_content"-->
-<!--                android:layout_margin="8dp"/>-->
+            <!--            <com.zhy.view.flowlayout.FlowLayout-->
+            <!--                android:id="@+id/flowlayout"-->
+            <!--                android:layout_width="match_parent"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:layout_margin="8dp"/>-->
 
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/hotMusicList"
             android:layout_width="match_parent"
             android:layout_height="300dp"
             android:layout_below="@+id/history"
-            android:id="@+id/hotMusicList"
-            android:orientation="vertical"
             android:background="@drawable/rounded_border"
-            android:visibility="gone"/>
+            android:orientation="vertical"
+            android:visibility="gone" />
 
 
     </RelativeLayout>

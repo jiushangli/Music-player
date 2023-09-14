@@ -24,7 +24,6 @@ lateinit var music: Music
 class Playlist {
     lateinit var name: String
     lateinit var playlist: ArrayList<Music>
-    lateinit var createdBy: String
     lateinit var createdOn: String
 }
 
@@ -32,7 +31,6 @@ class MusicPlaylist {
     var ref: ArrayList<Playlist> = ArrayList()
 }
 
-//这个函数在整个项目都可以用吗? 答案是可以的
 fun formatDuration(duration: Long): String {
     val minute = duration / 1000 / 60
     val second = duration / 1000 % 60

@@ -20,8 +20,6 @@ class MusicAdapter(val musicList: List<Song>): RecyclerView.Adapter<MusicAdapter
         val artName: TextView = view.findViewById(R.id.artName)
         val musicPicture: ImageView = view.findViewById(R.id.musicPicture)
 //        val itemSearch: LinearLayout = view.findViewById(R.id.itemSearch)
-
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -48,7 +46,7 @@ class MusicAdapter(val musicList: List<Song>): RecyclerView.Adapter<MusicAdapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val music = musicList[position]
         holder.musicName.text = music.name
-        holder.artName.text = music.ar.get(0).name
+        holder.artName.text = music.ar[0].name
 
 
 

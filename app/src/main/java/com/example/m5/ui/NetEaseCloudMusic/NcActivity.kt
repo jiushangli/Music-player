@@ -58,9 +58,9 @@ class NcActivity : AppCompatActivity() {
         adapterPlayList = PlayListsAdapter(viewModel.playLists)
         binding.recyclerViewPlaylist.adapter = adapterPlayList
 
-        val layoutManagerHotMiusic = LinearLayoutManager(this)
-        layoutManagerHotMiusic.orientation = LinearLayoutManager.HORIZONTAL
-        binding.hotMusics.layoutManager = layoutManagerHotMiusic
+        val layoutManagerHotMusic = LinearLayoutManager(this)
+        layoutManagerHotMusic.orientation = LinearLayoutManager.HORIZONTAL
+        binding.hotMusics.layoutManager = layoutManagerHotMusic
         adapterHotMusic = HotMiusicAdapter(viewModel.hotMusicLists)
         binding.hotMusics.adapter = adapterHotMusic
 
