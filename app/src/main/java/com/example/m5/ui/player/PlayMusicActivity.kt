@@ -1,5 +1,4 @@
-/*
-package com.example.m5.ui.player
+/*package com.example.m5.ui.player
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
