@@ -2,6 +2,10 @@ package com.example.m5.logic
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import com.example.m5.logic.model.CodeData
+import com.example.m5.logic.model.KeyData
+import com.example.m5.logic.model.LoginCodeStatusResponse
+import com.example.m5.logic.model.LoginStatusResponse
 import com.example.m5.logic.model.MainNcResponse
 import com.example.m5.logic.model.Song
 import com.example.m5.logic.network.MusicNetwork
@@ -100,44 +104,102 @@ object Repository {
     }
 
 
-//    fun getHighQuality() = liveData(Dispatchers.IO) {
-//        val result = try {
-//            val highQualityResponse = MusicNetwork.getHighQuality()
-//            if(highQualityResponse.code == "200"){
-//                Log.d("hucheng", highQualityResponse.toString())
-//
-//                Result.success(highQualityResponse)
-//            }else{
-//                Result.failure(RuntimeException(
-//                    "response code is ${highQualityResponse.code}"
-//                ))
-//            }
-//        }catch (e: Exception){
-//            Log.d("hucheng", "Repository error")
-//            Log.d("hucheng", e.toString())
-//            Result.failure<HighQualityResponse>(e)
-//        }
-//
-//        emit(result)
-//    }
-//
-//    fun getHotMusic() = liveData(Dispatchers.IO) {
-//        val result = try {
-//            val hotMusicResponse = MusicNetwork.getHotMusic()
-//            if(hotMusicResponse.code == "200" && hotMusicResponse.message == "success"){
-//                Result.success(hotMusicResponse.data)
-//            }else{
-//                Result.failure(RuntimeException(
-//                    "response code is ${hotMusicResponse.code} and message is ${hotMusicResponse.message}"
-//                ))
-//            }
-//
-//        }catch (e: Exception){
-//            Result.failure<List<HotMusic>>(e)
-//        }
-//
-//        emit(result)
-//    }
+    fun getKey(timestamp: String) = liveData(Dispatchers.IO) {
+        val result = try {
+            val key = MusicNetwork.getKey(timestamp)
+            if (key.code == "200"){
+                Result.success(key.data)
+            }else{
+                Result.failure(
+                    RuntimeException(
+                        "error"
+                    )
+                )
+            }
+
+        }catch (e: Exception){
+            Result.failure<KeyData>(e)
+        }
+
+        emit(result)
+    }
+
+    fun getCode(key: String, timestamp: String) = liveData(Dispatchers.IO){
+
+        val result = try {
+            val Qrcode = MusicNetwork.getCode(key, timestamp)
+            if(Qrcode.code == "200"){
+                Result.success(Qrcode.data)
+            }else{
+                Result.failure(
+                    RuntimeException(
+                        "error"
+                    )
+                )
+            }
+
+        }catch (e: Exception){
+            Result.failure<CodeData>(e)
+        }
+
+        emit(result)
+    }
+
+    //查询二维码扫码情况
+    fun getCodeStatue(key: String) = liveData(Dispatchers.IO) {
+
+        while (true){
+            val result = try {
+
+                Log.d("hucheng", "key : $key")
+                val qrStatus = MusicNetwork.getCodeStatue(key, System.currentTimeMillis().toString())
+
+                if (qrStatus?.code == "803"){
+                    Result.success(qrStatus)
+                }else{
+                    Thread.sleep(1000)
+                    continue
+                }
+
+            }catch (e: Exception){
+                Result.failure<LoginCodeStatusResponse>(e)
+            }
+
+            emit(result)
+            break
+        }
+
+
+
+    }
+
+    //获取登录状态
+    fun getStatus(timestamp: String, cookie: String) = liveData(Dispatchers.IO){
+        val result = try {
+
+            val status = MusicNetwork.getStatus(timestamp, cookie)
+
+            Log.d("hucheng", "timestamp: $timestamp  status: $status")
+
+            if (status != null){
+                Result.success(status)
+            }else{
+                Result.failure(
+                    RuntimeException(
+                        "error"
+                    )
+                )
+            }
+
+        }catch (e: Exception){
+            Result.failure<LoginStatusResponse>(e)
+        }
+
+        emit(result)
+
+    }
+
+
 
 
 }

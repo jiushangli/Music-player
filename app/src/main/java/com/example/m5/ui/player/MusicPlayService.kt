@@ -8,7 +8,7 @@ import android.os.IBinder
 class MusicPlayService : Service() {
 
 
-    private val myBinder: MyBinder()
+    private val myBinder =  MyBinder()
 
     inner class MyBinder: Binder(){
         fun currentService(): MusicPlayService{
