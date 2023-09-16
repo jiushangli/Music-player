@@ -1,5 +1,6 @@
 package com.example.m5.adapter
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
@@ -39,6 +40,7 @@ class PlaylistViewAdapter(
         return MyHolder(PlaylistViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
         holder.name.text = playlistList[position].name
         holder.name.isSelected = true
@@ -99,6 +101,7 @@ class PlaylistViewAdapter(
         return playlistList.size
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     fun refreshPlaylist() {
         playlistList = ArrayList()
         playlistList.addAll(PlaylistActivity.musicPlaylist.ref)

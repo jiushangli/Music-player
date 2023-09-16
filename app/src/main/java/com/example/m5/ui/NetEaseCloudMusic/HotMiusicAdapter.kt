@@ -48,21 +48,21 @@ class HotMiusicAdapter(val musics: List<HotMusic>): RecyclerView.Adapter<HotMius
             holder.hotMusicTitle2.text = musics[position*3+1].searchWord
             holder.hotMusicTitle3.text = musics[position*3+2].searchWord
 
-            Glide.with(NcActivity.instance!!)
+            Glide.with(NeBrowseActivity.instance!!)
                 .load(musics[position*3].iconUrl)
                 .into(holder.hotMusicImage1)
 
-            Glide.with(NcActivity.instance!!)
+            Glide.with(NeBrowseActivity.instance!!)
                 .load(musics[position*3+1].iconUrl)
                 .into(holder.hotMusicImage2)
 
-            Glide.with(NcActivity.instance!!)
+            Glide.with(NeBrowseActivity.instance!!)
                 .load(musics[position*3+2].iconUrl)
                 .into(holder.hotMusicImage3)
         }else{
             holder.hotMusicContent1.text = musics[position*3].content
             holder.hotMusicTitle1.text = musics[position*3].searchWord
-            Glide.with(NcActivity.instance!!)
+            Glide.with(NeBrowseActivity.instance!!)
                 .load(musics[position*3].iconUrl)
                 .into(holder.hotMusicImage1)
         }

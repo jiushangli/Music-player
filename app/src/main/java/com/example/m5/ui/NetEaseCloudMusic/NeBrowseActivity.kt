@@ -1,89 +1,90 @@
 package com.example.m5.ui.NetEaseCloudMusic
 
 import android.annotation.SuppressLint
-import android.content.Intent
+import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.example.m5.R
 import com.example.m5.databinding.ActivityNcBinding
-import com.example.m5.ui.searchMusic.SearchActivity
+import com.example.m5.util.setStatusBarTextColor
+import com.example.m5.util.transparentStatusBar
 
 
-class NcActivity : AppCompatActivity() {
+class NeBrowseActivity : AppCompatActivity() {
 
-    val viewModel by lazy { ViewModelProvider(this).get(MusicAcitivityViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this)[MusicAcitivityViewModel::class.java] }
 
     private lateinit var binding: ActivityNcBinding
 
-//    private lateinit var adapterSearch: MusicAdapter
     private lateinit var adapterPlayList: PlayListsAdapter
     private lateinit var adapterHotMusic: HotMiusicAdapter
     private lateinit var adapterNewMusicAls: ViewPagerAdapter
 
 
     companion object {
-        var instance: NcActivity? =null
+        var instance: NeBrowseActivity? =null
     }
 
 
-    @SuppressLint("ResourceType")
+    @SuppressLint("ResourceType", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.coolRed)
-        setContentView(R.layout.activity_nc)
-
-
         instance = this
-
         binding = ActivityNcBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
-        binding.toolbarnc.searchMusic.visibility = View.GONE
-        setSupportActionBar(binding.toolbarnc.toolbar)
+        transparentStatusBar(window)
+        setStatusBarTextColor(window, light = false)
 
 //        val layoutManagerSearch = LinearLayoutManager(this)
 //        binding.recyclerView.layoutManager = layoutManagerSearch
 //        adapterSearch = MusicAdapter(viewModel.musicList)
 //        binding.recyclerView.adapter = adapterSearch
 
-        val layoutManagerPlayLists = LinearLayoutManager(this)
-        layoutManagerPlayLists.orientation = LinearLayoutManager.HORIZONTAL
+/*        binding.rvPlaylistRecommend.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
+        // binding.rvPlaylistRecommend.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
+        binding.rvPlaylistRecommend.adapter = PlaylistRecommendAdapter(it)
+        */
+        val layoutManagerPlayLists = GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false)
         binding.recyclerViewPlaylist.layoutManager = layoutManagerPlayLists
-        adapterPlayList = PlayListsAdapter(viewModel.playLists)
+        adapterPlayList = PlayListsAdapter(viewModel.playLists,this)
         binding.recyclerViewPlaylist.adapter = adapterPlayList
 
-        val layoutManagerHotMusic = LinearLayoutManager(this)
+        val decoration: RecyclerView.ItemDecoration = object : RecyclerView.ItemDecoration() {
+            override fun getItemOffsets(
+                outRect: Rect,
+                view: View,
+                parent: RecyclerView,
+                state: RecyclerView.State
+            ) {
+                super.getItemOffsets(outRect, view, parent, state)
+                outRect.right = 0
+                outRect.left = 38
+                outRect.top = 10
+                outRect.bottom = 10
+            }
+        }
+        binding.recyclerViewPlaylist.addItemDecoration(decoration)
+
+/*        val layoutManagerHotMusic = LinearLayoutManager(this)
         layoutManagerHotMusic.orientation = LinearLayoutManager.HORIZONTAL
         binding.hotMusics.layoutManager = layoutManagerHotMusic
         adapterHotMusic = HotMiusicAdapter(viewModel.hotMusicLists)
-        binding.hotMusics.adapter = adapterHotMusic
+        binding.hotMusics.adapter = adapterHotMusic*/
 
 
         adapterNewMusicAls = ViewPagerAdapter(viewModel.newMusicesAls)
-        binding.loopViewPager.apply {
+/*        binding.loopViewPager.apply {
             adapter = adapterNewMusicAls
-        }
-
+        }*/
 
         viewModel.refresh()
-
-
-        //搜索框聚焦事件：跳转搜索页面
-        binding.toolbarnc.searchMusicEdit.setOnFocusChangeListener{_, hasFocus->
-            if(hasFocus){
-                //跳转
-                val intent = Intent(this, SearchActivity::class.java)
-                startActivity(intent)
-            }else{
-
-            }
-        }
 
 
         //获取歌单
@@ -140,8 +141,6 @@ class NcActivity : AppCompatActivity() {
                 adapterPlayList.notifyDataSetChanged()
                 adapterPlayList.notifyDataSetChanged()
                 adapterNewMusicAls.notifyDataSetChanged()
-            }else{
-
             }
         })
 
@@ -151,7 +150,6 @@ class NcActivity : AppCompatActivity() {
 
     override fun onRestart() {
         super.onRestart()
-        binding.toolbarnc.searchMusicEdit.clearFocus()
     }
 
     override fun onDestroy() {

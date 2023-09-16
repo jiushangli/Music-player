@@ -17,7 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
 import com.example.m5.adapter.MusicAdapter
 import com.example.m5.databinding.ActivityMainBinding
-import com.example.m5.ui.NetEaseCloudMusic.NcActivity
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist
 import com.example.m5.util.exitApplication
@@ -93,7 +92,7 @@ class MainActivity : AppCompatActivity() {
 
         //点击跳转网易云音乐源
         binding.NetEaseBtn.setOnClickListener {
-            val intent: Intent = Intent(this, NcActivity::class.java).setAction("your.custom.action")
+            val intent: Intent = Intent(this, NetEaseMineActivity::class.java).setAction("your.custom.action")
             startActivity(intent)
         }
 

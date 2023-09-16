@@ -1,38 +1,44 @@
 package com.example.m5.ui.NetEaseCloudMusic
 
+import android.content.Context
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.example.m5.R
+import com.example.m5.databinding.ItemPlaylistBinding
 import com.example.m5.logic.model.PlayList
 
-class PlayListsAdapter(val playLists: List<PlayList>): RecyclerView.Adapter<PlayListsAdapter.ViewHolder>() {
+class PlayListsAdapter(
+    private val playLists: ArrayList<PlayList>,
+    private val context: Context
+) : RecyclerView.Adapter<PlayListsAdapter.MyHolder>() {
 
-    inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
-        val playList: ImageView = view.findViewById(R.id.playList)
-        val descripte: TextView = view.findViewById(R.id.descripte)
+    class MyHolder(binding: ItemPlaylistBinding) : RecyclerView.ViewHolder(binding.root) {
+        val image = binding.playlistImg
+        val name = binding.playlistName
+        val root = binding.root
     }
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_playlist, parent, false)
-        val holder = ViewHolder(view)
-
-        //点击事件
-
-        return holder
+    override fun onCreateViewHolder(
+        parent: ViewGroup,
+        viewType: Int
+    ): MyHolder {
+        return MyHolder(
+            ItemPlaylistBinding.inflate(
+                LayoutInflater.from(context),
+                parent,
+                false
+            )
+        )
     }
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
+    override fun onBindViewHolder(holder: MyHolder, position: Int) {
         //加载
         val playList = playLists[position]
-        holder.descripte.text = playList.name
-        Glide.with(NcActivity.instance!!)
+        holder.name.text = playList.name
+        Glide.with(NeBrowseActivity.instance!!)
             .load(playList.coverImgUrl)
-            .into(holder.playList)
+            .into(holder.image)
     }
 
     override fun getItemCount() = playLists.size
