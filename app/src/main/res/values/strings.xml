@@ -48,5 +48,17 @@
     <string name="playNext">下一首播放 </string>
     <string name="deleteFromPlaylist">从歌单中移除</string>
     <string name="hotPlaylists">推荐歌单</string>
+    <string name="spotifyBtn">spotify</string>
+    <string name="qqBtn">QQ音乐</string>
+    <string name="neteaseBtn">网易云</string>
+    <string name="localBtn">本地</string>
+    <string name="netease_user_name">杨青花一</string>
+    <string name="following_ne">6 Following</string>
+    <string name="followed_ne">6 Followed</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="login">请登录</string>
 
 </resources>

@@ -1,35 +1,54 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+<com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="150dp"
-    android:layout_height="180dp"
-    app:cardCornerRadius="4dp">
+    android:id="@+id/card"
+    style="@style/Widget.Material3.CardView.Elevated"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    app:cardBackgroundColor="@color/android_green"
+    app:cardElevation="0dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:paddingTop="10dp"
-        android:paddingBottom="10dp"
-        android:paddingEnd="10dp"
-        android:paddingStart="10dp">
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
+        <!-- Media -->
+        <com.google.android.material.card.MaterialCardView
+            style="Widget.Material3.CardView.Elevated"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/android_green">
 
-        <ImageView
-            android:id="@+id/playList"
+            <ImageView
+                android:id="@+id/playlistImg"
+                android:layout_width="170dp"
+                android:layout_height="160dp"
+                android:background="@drawable/rounded_background"
+                android:scaleType="centerCrop"
+                app:srcCompat="@drawable/yqhy" />
+        </com.google.android.material.card.MaterialCardView>
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="140dp"
-            android:background="@drawable/rounded_border"/>
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="18dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="12dp"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/descripte"
-            android:layout_width="match_parent"
-            android:layout_height="20dp"
-            android:layout_gravity="bottom"/>
+            <!-- Title, secondary and supporting text -->
+            <TextView
+                android:id="@+id/playlistName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/playlist_name"
+                android:textSize="12sp"
+                android:textStyle="bold" />
 
+        </RelativeLayout>
 
     </LinearLayout>
 
+</com.google.android.material.card.MaterialCardView>
 
-
-</androidx.cardview.widget.CardView>

@@ -12,6 +12,8 @@ object MusicNetwork {
 
     private val searchService = ServiceCreator.create<SearchService>()
     private val mainService = ServiceCreator.create<MainService>()
+    private val loginService = ServiceCreator.create<LoginService>()
+
 
     suspend fun searchMusic(keywords: String) = searchService.searchMusic(keywords).await()
     suspend fun getUri(id: Long, level: String) = searchService.getUri(id, level).await()
@@ -21,6 +23,14 @@ object MusicNetwork {
     suspend fun getHotMusic() = mainService.mainHotMusic().await()
 
     suspend fun getNewMusicAls() = mainService.mainNewSongAl().await()
+
+    suspend fun getKey(timestamp:String) = loginService.getKey(timestamp).await()
+
+    suspend fun getCode(key: String, timestamp: String) = loginService.getCode(key, timestamp).await()
+
+    suspend fun getCodeStatue(key: String, timestamp: String) = loginService.getLoginCodeStatus(key, timestamp).await()
+
+    suspend fun getStatus(timestamp: String) = loginService.getLoginStatus(timestamp).await()
 
     private suspend fun <T> Call<T>.await(): T{
         return suspendCoroutine { continuation ->

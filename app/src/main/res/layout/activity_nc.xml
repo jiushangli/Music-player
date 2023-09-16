@@ -1,95 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <RelativeLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/NeteaseEverything"
+        android:name="com.example.m5.frag.NeteaseEverything"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="10dp"
+        android:layout_marginTop="30dp"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_netease_everything" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:text="推荐歌单"
+        android:layout_margin="7dp"
+        android:textStyle="bold"
+        android:layout_height="wrap_content"/>
 
+    <com.example.m5.widge.RecyclerViewAtViewPager2
+        android:id="@+id/recyclerViewPlaylist"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="0dp"
+        android:layout_marginEnd="0dp"
+        android:overScrollMode="never" />
 
-        <include layout="@layout/toolbar"
-            android:id="@+id/toolbarnc"/>
-
-
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@id/toolbarnc"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/recyclerView"
-            android:visibility="gone"/>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/toolbarnc"
-            android:padding="10dp"
-            android:paddingTop="10dp"
-            android:orientation="horizontal"
-            android:id="@+id/loopViewPagerAll">
-
-            <androidx.viewpager.widget.ViewPager
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:padding="10dp"
-                android:id="@+id/loopViewPager"/>
-
-
-
-
-        </LinearLayout>
-
-
-        <LinearLayout
-            android:id="@+id/playlists"
-            android:layout_below="@+id/loopViewPagerAll"
-            android:layout_width="match_parent"
-            android:layout_height="35dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="30dp"
-                android:paddingStart="10dp"
-                android:paddingEnd="10dp"
-                android:paddingBottom="2dp"
-                android:paddingTop="2dp"
-                android:layout_gravity="center_vertical"
-                android:gravity="center_vertical"
-                android:text="@string/hotPlaylists"/>
-
-            <ImageView
-                android:id="@+id/into"
-                android:layout_width="20dp"
-                android:layout_height="25dp"
-                android:src="@drawable/next_icon"
-                android:layout_gravity="center_vertical"/>
-
-
-        </LinearLayout>
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:layout_below="@id/playlists"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:id="@+id/recyclerViewPlaylist" />
-
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/hotMusics"
-            android:layout_below="@+id/recyclerViewPlaylist"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:paddingTop="20dp"/>
-
-
-
-    </RelativeLayout>
-
-    
 
 </LinearLayout>

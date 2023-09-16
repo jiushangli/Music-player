@@ -46,7 +46,7 @@ class ViewPagerAdapter(val musicAls: List<MusicAl>): PagerAdapter() {
 
         val musicAl = musicAls[position]
         textView.text = musicAl.artists[0].name
-        Glide.with(NcActivity.instance!!)
+        Glide.with(NeBrowseActivity.instance!!)
             .load(musicAl.artists[0].picUrl)
             .into(imageView)
 

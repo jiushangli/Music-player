@@ -9,7 +9,7 @@ import retrofit2.http.Query
 
 interface SearchService {
 
-    @GET("/cloudsearch?limit=6")
+    @GET("/cloudsearch?limit=16")
     fun searchMusic(@Query("keywords") keywords: String): Call<MusicSearchResponse>
 
     @GET("/song/url/v1")
