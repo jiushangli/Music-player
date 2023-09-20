@@ -1,16 +1,20 @@
 package com.example.m5.ui.login.QRcodelogin
 
+import android.graphics.Bitmap
 import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.databinding.ActivityQrLoginBinding
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivityViewModel
+import java.io.ByteArrayInputStream
+import java.io.ByteArrayOutputStream
 
 class QrLoginActivity : AppCompatActivity() {
 
@@ -56,7 +60,7 @@ class QrLoginActivity : AppCompatActivity() {
                 Log.d("hucheng", "${result.qrurl} + ${result.qrimg}")
                 if(result.qrimg != null){
                     binding.qrCodeImage.setImageBitmap(viewModel.base642Bitmap(result.qrimg))
-
+                    viewModel.bitmap = viewModel.base642Bitmap(result.qrimg)
                     viewModel.getCodeStatus(viewModel.key)
 
                 }
@@ -70,6 +74,9 @@ class QrLoginActivity : AppCompatActivity() {
             Log.d("hucheng", "cookie : ${QrLoginActivityViewModel.cookie}")
             NetEaseMineActivityViewModel.isLongined = true
             Log.d("hucheng", "cookie: ${QrLoginActivityViewModel.cookie}")
+
+            //保存cookie
+            viewModel.saveCookie(QrLoginActivityViewModel.cookie!!)
             finish()
         })
 
@@ -77,6 +84,25 @@ class QrLoginActivity : AppCompatActivity() {
 
         //开始时候获取
         viewModel.getKey(System.currentTimeMillis().toString())
+
+
+        //点击保存图片
+        binding.saveQrCode.setOnClickListener {
+            Toast.makeText(this, "点击了", Toast.LENGTH_SHORT).show()
+            if (viewModel.bitmap == null)
+                Toast.makeText(this, "图片尚未加载", Toast.LENGTH_SHORT).show()
+            else{
+                val picName = "NeteaseLoginQRCode.jpg"
+                try {
+                    val temp = ByteArrayOutputStream()
+                    viewModel.bitmap.compress(Bitmap.CompressFormat.JPEG, 0, temp)
+                    val byin = ByteArrayInputStream(temp.toByteArray())
+                    viewModel.insert2Album(byin, picName)
+                }catch (e: Exception){
+                    e.printStackTrace()
+                }
+            }
+        }
 
 
     }

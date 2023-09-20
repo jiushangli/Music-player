@@ -2,6 +2,7 @@ package com.example.m5.logic
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import com.example.m5.logic.dao.CookieDao
 import com.example.m5.logic.model.CodeData
 import com.example.m5.logic.model.KeyData
 import com.example.m5.logic.model.LoginCodeStatusResponse
@@ -199,6 +200,17 @@ object Repository {
 
     }
 
+
+
+
+
+
+    //持久化层
+    fun saveCookie(cookie: String) = CookieDao.saveCookie(cookie)
+
+    fun getSavedCookie() = CookieDao.getSavedCookie()
+
+    fun isCookieSaved() = CookieDao.isCookieSaved()
 
 
 
