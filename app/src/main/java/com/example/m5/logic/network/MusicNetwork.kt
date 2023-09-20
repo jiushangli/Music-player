@@ -13,6 +13,7 @@ object MusicNetwork {
     private val searchService = ServiceCreator.create<SearchService>()
     private val mainService = ServiceCreator.create<MainService>()
     private val loginService = ServiceCreator.create<LoginService>()
+    private val RecommendService = ServiceCreator.create<RecommendService>()
 
 
     suspend fun searchMusic(keywords: String) = searchService.searchMusic(keywords).await()
@@ -32,7 +33,7 @@ object MusicNetwork {
 
     suspend fun getStatus(timestamp: String, cookie: String) = loginService.getLoginStatus(timestamp, cookie).await()
 
-
+    suspend fun getRecommend(cookie: String) = RecommendService.getRecommend(cookie).await()
     private suspend fun <T> Call<T>.await(): T{
         return suspendCoroutine { continuation ->
             enqueue(object: Callback<T>{

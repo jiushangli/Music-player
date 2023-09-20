@@ -59,21 +59,59 @@
         app:layout_constraintVertical_chainStyle="packed"
         tools:text="@tools:sample/full_names" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/artistMV"
+    <!--    <com.google.android.material.textview.MaterialTextView-->
+    <!--        android:id="@+id/reason"-->
+    <!--        android:layout_width="0dp"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:ellipsize="end"-->
+    <!--        android:maxLines="1"-->
+    <!--        android:paddingHorizontal="16dp"-->
+    <!--        android:textAppearance="@style/TextViewBody2"-->
+    <!--        android:textColor="?android:attr/textColorSecondary"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toStartOf="@id/more_action"-->
+    <!--        app:layout_constraintHorizontal_bias="0.5"-->
+    <!--        app:layout_constraintStart_toEndOf="@id/imageTextContainer"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/songNameMV"-->
+    <!--        tools:text="@tools:sample/full_names" />-->
+
+
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:ellipsize="end"
-        android:maxLines="1"
-        android:paddingHorizontal="16dp"
-        android:textAppearance="@style/TextViewBody2"
-        android:textColor="?android:attr/textColorSecondary"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/more_action"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toEndOf="@id/imageTextContainer"
-        app:layout_constraintTop_toBottomOf="@+id/songNameMV"
-        tools:text="@tools:sample/full_names" />
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@+id/songNameMV">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/songInf"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:layout_marginStart="3dp"
+            android:visibility="gone"
+            android:paddingHorizontal="16dp"
+            android:background="@drawable/rounded_border"
+            android:textAppearance="@style/TextViewBody2"
+            android:textColor="?android:attr/textColorSecondary"
+            tools:text="@tools:sample/full_names"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/artistMV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:maxLines="1"
+            android:paddingHorizontal="16dp"
+            android:textAppearance="@style/TextViewBody2"
+            android:textColor="?android:attr/textColorSecondary"
+            tools:text="@tools:sample/full_names"/>
+
+    </LinearLayout>
 
     <androidx.appcompat.widget.AppCompatImageView
         android:id="@+id/more_action"

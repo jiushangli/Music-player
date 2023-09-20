@@ -77,6 +77,15 @@ class NetEaseMineActivity : AppCompatActivity() {
 
 
 
+        //在创建时查询cookie，因为从登录页面回来之后cookie已经就有了，无需再次查询
+
+        if (viewModel.isCookieSaved()){
+            QrLoginActivityViewModel.cookie = viewModel.getSavedCookie()
+            NetEaseMineActivityViewModel.isLongined = true
+        }else{
+            Log.d("hucheng", "未登录")
+        }
+
 
 
 

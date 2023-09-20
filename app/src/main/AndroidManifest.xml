@@ -45,6 +45,12 @@
         android:theme="@style/splash_screen"
         tools:targetApi="31">
         <activity
+            android:name=".ui.recommend.RecommendActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.personalPage.PersonalPageActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.login.QRcodelogin.QrLoginActivity"
             android:exported="false" />
         <activity

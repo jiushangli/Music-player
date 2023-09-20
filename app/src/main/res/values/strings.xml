@@ -60,5 +60,6 @@
 
 
     <string name="login">请登录</string>
+    <string name="playAll">播放全部</string>
 
 </resources>

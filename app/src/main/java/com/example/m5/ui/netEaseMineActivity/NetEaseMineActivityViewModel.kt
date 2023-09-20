@@ -25,6 +25,10 @@ class NetEaseMineActivityViewModel: ViewModel() {
                     .into(NetEaseMineActivity.install!!.binding.userImgNMA)
         }
 
+
+
+
+
     }
 
     private val statusliveData = MutableLiveData<Pair<String, String>>()
@@ -41,6 +45,12 @@ class NetEaseMineActivityViewModel: ViewModel() {
     }
 
 
+
+
+    //持久化层
+    fun isCookieSaved() = Repository.isCookieSaved()
+
+    fun getSavedCookie() = Repository.getSavedCookie()
 
 
 

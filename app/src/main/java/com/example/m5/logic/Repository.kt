@@ -2,11 +2,13 @@ package com.example.m5.logic
 
 import android.util.Log
 import androidx.lifecycle.liveData
+import com.example.m5.logic.dao.CookieDao
 import com.example.m5.logic.model.CodeData
 import com.example.m5.logic.model.KeyData
 import com.example.m5.logic.model.LoginCodeStatusResponse
 import com.example.m5.logic.model.LoginStatusResponse
 import com.example.m5.logic.model.MainNcResponse
+import com.example.m5.logic.model.RecommendSongsResponse
 import com.example.m5.logic.model.Song
 import com.example.m5.logic.network.MusicNetwork
 import kotlinx.coroutines.Dispatchers
@@ -199,6 +201,39 @@ object Repository {
 
     }
 
+
+
+
+
+    //获取每日推荐
+    fun getRecommend(cookie: String) = liveData(Dispatchers.IO) {
+        val result = try {
+            val recommend = MusicNetwork.getRecommend(cookie)
+            if (recommend.code == "200"){
+                Result.success(recommend)
+            }else{
+                Result.failure(
+                    RuntimeException(
+                        "error"
+                    )
+                )
+            }
+        }catch (e: Exception){
+            Result.failure<RecommendSongsResponse>(e)
+        }
+        emit(result)
+    }
+
+
+
+
+
+    //持久化层
+    fun saveCookie(cookie: String) = CookieDao.saveCookie(cookie)
+
+    fun getSavedCookie() = CookieDao.getSavedCookie()
+
+    fun isCookieSaved() = CookieDao.isCookieSaved()
 
 
 

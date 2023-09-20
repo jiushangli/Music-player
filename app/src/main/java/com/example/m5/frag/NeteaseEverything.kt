@@ -12,6 +12,7 @@ import com.example.m5.activity.MainActivity
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
 import com.example.m5.databinding.FragmentNeteaseEverythingBinding
 import com.example.m5.ui.NetEaseCloudMusic.NeBrowseActivity
+import com.example.m5.ui.recommend.RecommendActivity
 import com.example.m5.ui.searchMusic.SearchActivity
 
 class NeteaseEverything : Fragment() {
@@ -51,6 +52,16 @@ class NeteaseEverything : Fragment() {
                 Intent(
                     requireContext(),
                     SearchActivity::class.java
+                ).setAction("your.custom.action")
+            ContextCompat.startActivity(requireContext(), intent, null)
+        }
+
+
+        binding.RecommendedBtnNF.setOnClickListener {
+            val intent =
+                Intent(
+                    requireContext(),
+                    RecommendActivity::class.java
                 ).setAction("your.custom.action")
             ContextCompat.startActivity(requireContext(), intent, null)
         }
