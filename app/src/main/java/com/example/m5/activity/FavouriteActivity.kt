@@ -8,9 +8,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
-import com.example.m5.adapter.MusicAdapter
+import com.example.m5.adapter.MusicAdapterX
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityFavouriteBinding
-import com.example.m5.util.Music
 import com.example.m5.util.checkPlaylist
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
@@ -21,10 +21,10 @@ class FavouriteActivity : AppCompatActivity() {
     private lateinit var binding: ActivityFavouriteBinding
 
     companion object {
-        var favouriteSongs: ArrayList<Music> = ArrayList()
+        var favouriteSongs: ArrayList<StandardSongData> = ArrayList()
         var favouritesChanged: Boolean = false
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: MusicAdapterX
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -37,7 +37,9 @@ class FavouriteActivity : AppCompatActivity() {
 
 
         //检查并排除已经不存在的音乐
-        favouriteSongs = checkPlaylist(favouriteSongs)
+//        favouriteSongs = checkPlaylist(favouriteSongs)
+
+
 
         binding.favouriteRV.setHasFixedSize(true)
         binding.favouriteRV.setItemViewCacheSize(13)
@@ -46,7 +48,7 @@ class FavouriteActivity : AppCompatActivity() {
         // 创建 MusicAdapter 实例，并传入 MainActivity 和音乐列表作为参数
 //        adapter = FavouriteAdapter(this, favouriteSongs)
         adapter =
-            MusicAdapter(this@FavouriteActivity, favouriteSongs,favouriteActivity=true)        // 将 musicAdapter 设置为 musicRV 的适配器
+            MusicAdapterX(this@FavouriteActivity, favouriteSongs,favouriteActivity=true)        // 将 musicAdapter 设置为 musicRV 的适配器
         binding.favouriteRV.adapter = adapter
 
 

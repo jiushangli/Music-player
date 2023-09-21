@@ -10,6 +10,7 @@ import android.view.Window
 import android.view.WindowManager
 import com.example.m5.activity.FavouriteActivity
 import com.example.m5.activity.PlayerActivity
+import com.example.m5.data.StandardSongData
 import com.example.m5.logic.model.Al
 import com.example.m5.logic.model.Ar
 import java.io.File
@@ -23,11 +24,11 @@ data class Music(
 data class Song(val name: String, val id: Long, val ar: List<Ar>, val al: Al, val free: Boolean)
 
 
-lateinit var music: Music
+lateinit var music: StandardSongData
 
 class Playlist {
     lateinit var name: String
-    lateinit var playlist: ArrayList<Music>
+    lateinit var playlist: ArrayList<StandardSongData>
     lateinit var createdOn: String
 }
 
@@ -86,10 +87,10 @@ fun favouriteChecker(id: String): Int {
     return -1
 }
 
-fun checkPlaylist(playlist: ArrayList<Music>): ArrayList<Music> {
+fun checkPlaylist(playlist: ArrayList<StandardSongData>): ArrayList<StandardSongData> {
     playlist.forEachIndexed { index, music ->
-        val file = File(music.path)
-        if (!file.exists())
+        val file = music.localInfo?.path?.let { File(it) }
+        if (!file?.exists()!!)
             playlist.removeAt(index)
     }
     return playlist
@@ -129,8 +130,8 @@ fun setStatusBarTextColor(window: Window, light: Boolean) {
     }
 }
 
-fun updateFavourites(newList: ArrayList<Music>) {
-    val musicList = ArrayList<Music>()
+fun updateFavourites(newList: ArrayList<StandardSongData>) {
+    val musicList = ArrayList<StandardSongData>()
     musicList.addAll(newList)
 }
 

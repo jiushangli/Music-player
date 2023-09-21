@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.activity.PlayerActivity
-import com.example.m5.adapter.MusicAdapter
+import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.databinding.ActivityPlaylistDetailsBinding
 import com.example.m5.util.checkPlaylist
 import com.example.m5.util.setStatusBarTextColor
@@ -24,7 +24,7 @@ class PlaylistDetails : AppCompatActivity() {
     companion object {
         var currentPlaylistPos: Int = -1
         @SuppressLint("StaticFieldLeak")
-        lateinit var adapter: MusicAdapter
+        lateinit var adapter: MusicAdapterX
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -48,7 +48,7 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
         adapter =
-            MusicAdapter(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
+            MusicAdapterX(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
         binding.playlistDetailsRV.adapter = adapter
 
         binding.shuffleBtnPD.setOnClickListener {
@@ -113,7 +113,7 @@ class PlaylistDetails : AppCompatActivity() {
 
         if (adapter.itemCount > 0) {
             Glide.with(this)
-                .load(PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist[0].artUri)
+                .load(PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist[0].imageUrl)
                 .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
                 .into(binding.playlistImgPD)
             binding.shuffleBtnPD.visibility = View.VISIBLE

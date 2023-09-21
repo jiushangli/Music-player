@@ -15,9 +15,13 @@ import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
-import com.example.m5.adapter.MusicAdapter
+import com.example.m5.adapter.MusicAdapterX
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityMainBinding
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
+import com.example.m5.ui.searchMusic.MusicAdapter
+import com.example.m5.util.LocalMusic
+import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist
 import com.example.m5.util.exitApplication
@@ -31,11 +35,14 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-    private lateinit var musicAdapter: MusicAdapter
+//    private lateinit var musicAdapter: MusicAdapter
+    private lateinit var musicAdapterX: MusicAdapterX
 
     companion object {
         lateinit var MusicListMA: ArrayList<Music>
-        lateinit var musicListSearch: ArrayList<Music>
+        lateinit var MusicListMAX: ArrayList<StandardSongData>
+        lateinit var musicListSearch: ArrayList<StandardSongData>
+        lateinit var musicListSearchX: ArrayList<StandardSongData>
         var search: Boolean = false
         var themeIndex: Int = 2
         val currentTheme = arrayOf(
@@ -73,9 +80,9 @@ class MainActivity : AppCompatActivity() {
             //取得我喜欢的列表
             val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE)
             val jsonString = editor.getString("FavouriteSongs", null)
-            val typeToken = object : TypeToken<ArrayList<Music>>() {}.type
+            val typeToken = object : TypeToken<ArrayList<StandardSongData>>() {}.type
             if (jsonString != null) {
-                val data: ArrayList<Music> = GsonBuilder().create().fromJson(jsonString, typeToken)
+                val data: ArrayList<StandardSongData> = GsonBuilder().create().fromJson(jsonString, typeToken)
                 FavouriteActivity.favouriteSongs.addAll(data)
             }
 
@@ -119,9 +126,11 @@ class MainActivity : AppCompatActivity() {
             //点击随机播放跳到播放界面
             startActivity(intent)
         }
+        //长按进行歌单的打乱(我还没有做持久化)
+        //todo 进行打乱的歌单的持久化
         binding.shuffleBtn.setOnLongClickListener {
             MusicListMA.shuffle()
-            musicAdapter.notifyDataSetChanged()
+            musicAdapterX.notifyDataSetChanged()
             true
         }
         //从喜欢按钮跳到喜欢的音乐列表
@@ -182,7 +191,6 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
-    //这是一个回调函数
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onRequestPermissionsResult(
         requestCode: Int,
@@ -207,19 +215,25 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     private fun initializeLayout() {
         search = false
+        //排序的偏好
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
         sortOrder = sortEditor.getInt("sortOrder", 0)
+        //扫描得到歌单
         MusicListMA = getAllAudio()
+        MusicListMAX = getAllAudioX(this)
+
         // 设置 RecyclerView 的固定大小以及缓存的项数，以优化性能
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
         // 设置 RecyclerView 的布局管理器为线性布局管理器
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
         // 创建 MusicAdapter 实例，并传入 MainActivity 和音乐列表作为参数
-        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+//        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
+        musicAdapterX = MusicAdapterX(this@MainActivity, MusicListMAX)
+
 
         // 将 musicAdapter 设置为 musicRV 的适配器
-        binding.musicRV.adapter = musicAdapter
+        binding.musicRV.adapter = musicAdapterX
     }
 
     //获取音乐列表的函数,查询本地音乐并且返回一个列表
@@ -261,11 +275,11 @@ class MainActivity : AppCompatActivity() {
                         cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
                     val path =
                         cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-                    val ablumIdC =
+                    val albumIdC =
                         cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
                     val uri = Uri.parse("content://media/external/audio/albumart")
                     //通过album_id找到专辑封面图片uri
-                    val artUriC = Uri.withAppendedPath(uri, ablumIdC).toString()
+                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
                     val music = Music(id, title, album, artist, duration, path, artUriC)
                     val file = File(path)
                     if (file.exists()) {
@@ -281,7 +295,6 @@ class MainActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         if (!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
-//            exitProcess(1)
             exitApplication()
         }
     }
@@ -300,8 +313,8 @@ class MainActivity : AppCompatActivity() {
         val sortValue = sortEditor.getInt("sortOrder", 0)
         if (sortValue != sortOrder) {
             sortOrder = sortValue
-            MusicListMA = getAllAudio()
-            musicAdapter.updateMusicList(MusicListMA)
+            MusicListMAX = getAllAudioX(this)
+            musicAdapterX.updateMusicList(MusicListMAX)
         }
     }
 
@@ -314,14 +327,14 @@ class MainActivity : AppCompatActivity() {
                 musicListSearch = ArrayList()
                 if (newText != null) {
                     val userInput = newText.lowercase()
-                    for (song in MusicListMA) {
-                        if (song.title.lowercase().contains(userInput)) {
+                    for (song in MusicListMAX) {
+                        if (song.name?.lowercase()?.contains(userInput) == true) {
                             musicListSearch.add(song)
                         }
                     }
                     search = true
                     //实时更新页面
-                    musicAdapter.updateMusicList(searchList = musicListSearch)
+//                    musicAdapterX.updateMusicList(searchList = musicListSearch)
                 }
                 return true
             }

@@ -20,8 +20,9 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.service.MusicService
 import com.example.m5.R
+import com.example.m5.data.SOURCE_LOCAL
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityPlayerBinding
-import com.example.m5.util.Music
 import com.example.m5.util.exitApplication
 import com.example.m5.util.favouriteChecker
 import com.example.m5.util.formatDuration
@@ -35,7 +36,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
     companion object {
-        var musicListPA  =  ArrayList<Music>()
+        var musicListPA = ArrayList<StandardSongData>()
         var songPosition: Int = 0
 
         //?的含义是可以为空,!的含义是非空断言,!!的含义是非空断言,如果为空就抛出异常
@@ -60,7 +61,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         setContentView(binding.root)
         transparentStatusBar(window)
         setStatusBarTextColor(window, false)
-
         if (intent.data?.scheme.contentEquals("content")) {
             val intentService = Intent(this, MusicService::class.java)
             //绑定服务,其中BIND_AUTO_CREATE表示在Activity和Service建立关联后自动创建Service
@@ -71,20 +71,20 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicListPA.add(getMusicDetails(intent.data!!))
 
             Glide.with(this)
-                .load(getImgArt(musicListPA[songPosition].path))
+                .load(musicListPA[songPosition].imageUrl?.let { getImgArt(it) })
                 .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
                 .into(binding.songImgPA)
-            binding.songNamePA.text = musicListPA[songPosition].title
-            binding.artistPA.text = musicListPA[songPosition].artist
+            binding.songNamePA.text = musicListPA[songPosition].name
+            binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
         } else
-            initializeLayout()
+        initializeLayout()
 
         binding.navPA.setOnClickListener {
             showItemSelectDialog(this@PlayerActivity, position = songPosition)
         }
 
         //绑定播放按钮
-        binding.playPauseBtnPA.setOnClickListener() {
+        binding.playPauseBtnPA.setOnClickListener {
             if (isPlaying) {
                 pauseMusic()
             } else {
@@ -92,10 +92,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }
         }
         //上下一首
-        binding.previousBtnPA.setOnClickListener() {
+        binding.previousBtnPA.setOnClickListener {
             preNextSong(false)
         }
-        binding.nextBtnPA.setOnClickListener() {
+        binding.nextBtnPA.setOnClickListener {
             preNextSong(true)
         }
         //进度条
@@ -151,25 +151,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].path))
+            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].localInfo?.path))
             startActivity(Intent.createChooser(shareIntent, "分享音乐文件给你的朋友"))
         }
 
         //收藏喜欢音乐
-        binding.favouriteBtnPA.setOnClickListener {
-            if (isFavourite) {
-                isFavourite = false
-                binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-                FavouriteActivity.favouriteSongs.removeAt(fIndex)
-            } else {
-                isFavourite = true
-                binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
-                FavouriteActivity.favouriteSongs.add(musicListPA[songPosition])
-            }
-        }
 
         binding.favouriteBtnPA.setOnClickListener {
-            fIndex = favouriteChecker(musicListPA[songPosition].id)
+            fIndex = favouriteChecker(musicListPA[songPosition].id!!)
             if(isFavourite){
                 isFavourite = false
                 binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
@@ -183,7 +172,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-    private fun getMusicDetails(contentUri: Uri): Music {
+    private fun getMusicDetails(contentUri: Uri): StandardSongData {
         var cursor: Cursor? = null
         try {
             val projection = arrayOf(MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION)
@@ -193,14 +182,23 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             cursor!!.moveToFirst()
             val path = dataColumn?.let { cursor.getString(it) }
             val duration = durationColumn?.let { cursor.getLong(it) }
-            return Music(
+            val artistList = ArrayList<StandardSongData.StandardArtistData>()
+            artistList.add(
+                StandardSongData.StandardArtistData(
+                    null,
+                    "artist"
+                )
+            )
+
+            return StandardSongData(
+                SOURCE_LOCAL,
                 id = "Unknown",
-                title = path.toString(),
-                artist = "Unknown",
-                album = "Unknown",
-                duration = duration!!,
-                path = path.toString(),
-                artUri = "Unknown"
+                name = path.toString(),
+                imageUrl = "artUriC",
+                artistList,
+                null,
+                StandardSongData.LocalInfo(duration = duration!!, path = path),
+                null
             )
         } finally {
         }
@@ -208,20 +206,19 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     //填充界面的图片以及歌曲名称
     private fun setLayout() {
-        fIndex = favouriteChecker(musicListPA[songPosition].id)
+        fIndex = musicListPA[songPosition].id?.let { favouriteChecker(it) }!!
         Glide.with(this)
-            .load(musicListPA[songPosition].artUri)
-            .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
+            .load(musicListPA[songPosition].imageUrl)
+            .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
             .into(binding.songImgPA)
-        binding.songNamePA.text = musicListPA[songPosition].title
-        binding.artistPA.text = musicListPA[songPosition].artist
+        binding.songNamePA.text = musicListPA[songPosition].name
+        binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
         if (repeat) binding.repeatBtnPA.setImageResource(R.drawable.repeat_one_icon)
         else binding.repeatBtnPA.setImageResource(R.drawable.repeat_icon)
         if (min15 || min30 || min60)
             binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.bordeaux_red))
         if (isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
         else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-
     }
 
     //创建播放器
@@ -231,7 +228,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             //这里在设置播放器
             musicService!!.mediaPlayer!!.reset()
-            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].path)
+            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].localInfo?.path)
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             isPlaying = true
@@ -247,7 +244,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             binding.seekBarPA.progress = 0
             binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-            nowPlayingId = musicListPA[songPosition].id
+            nowPlayingId = musicListPA[songPosition].id!!
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -260,20 +257,22 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         songPosition = intent.getIntExtra("index", 0)
 
         //获取传递过来的数据,其中class为传递过来的类名
-        when(intent.getStringExtra("class")){
-            "NowPlaying"->{
+        when (intent.getStringExtra("class")) {
+            "NowPlaying" -> {
                 setLayout()
-                binding.tvSeekBarStart.text = formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.tvSeekBarEnd.text = formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                binding.tvSeekBarStart.text =
+                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                binding.tvSeekBarEnd.text =
+                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
                 binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
                 binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-                if(isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
+                if (isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
                 else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
             }
             "MusicAdapterSearch"-> initServiceAndPlaylist(MainActivity.musicListSearch, shuffle = false)
-            "MusicAdapter" -> initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = false)
+            "MusicAdapter" -> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = false)
             "FavouriteAdapter"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = false)
-            "MainActivity"-> initServiceAndPlaylist(MainActivity.MusicListMA, shuffle = true)
+            "MainActivity"-> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = true)
             "FavouriteShuffle"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = true)
             "FavouriteSequence"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = false)
             "PlaylistDetailsAdapter"->
@@ -287,14 +286,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     private fun playMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-        musicService!!.showNotification(R.drawable.ic_pause,1F)
+        musicService!!.showNotification(R.drawable.ic_pause, 1F)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
-        musicService!!.showNotification(R.drawable.play_icon,0F)
+        musicService!!.showNotification(R.drawable.play_icon, 0F)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
     }
@@ -313,11 +312,15 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     //为什么要用service的方式,这是为了让音乐播放器在后台运行,而不是在前台运行
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        if(musicService == null){
+        if (musicService == null) {
             val binder = service as MusicService.MyBinder
             musicService = binder.currentService()
             musicService!!.audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            musicService!!.audioManager.requestAudioFocus(musicService, AudioManager.STREAM_MUSIC, AudioManager.AUDIOFOCUS_GAIN)
+            musicService!!.audioManager.requestAudioFocus(
+                musicService,
+                AudioManager.STREAM_MUSIC,
+                AudioManager.AUDIOFOCUS_GAIN
+            )
         }
         createMediaPlayer()
         musicService!!.seekBarSetup()
@@ -381,18 +384,22 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-    override fun onDestroy() {
+/*    override fun onDestroy() {
         super.onDestroy()
         if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
-    }
+    }*/
 
-    private fun initServiceAndPlaylist(playlist: ArrayList<Music>, shuffle: Boolean, playNext: Boolean = false){
+    private fun initServiceAndPlaylist(
+        playlist: ArrayList<StandardSongData>,
+        shuffle: Boolean,
+        playNext: Boolean = false
+    ) {
         val intent = Intent(this, MusicService::class.java)
         bindService(intent, this, BIND_AUTO_CREATE)
         startService(intent)
         musicListPA = ArrayList()
         musicListPA.addAll(playlist)
-        if(shuffle) musicListPA.shuffle()
+        if (shuffle) musicListPA.shuffle()
         setLayout()
     }
 }

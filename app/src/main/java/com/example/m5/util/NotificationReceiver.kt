@@ -5,6 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
+import com.example.m5.MusicApplication
 import com.example.m5.R
 import com.example.m5.activity.PlayerActivity
 import com.example.m5.frag.NowPlaying
@@ -12,12 +13,12 @@ import com.example.m5.frag.NowPlaying
 class NotificationReceiver : BroadcastReceiver() {
     override fun onReceive(content: Context?, intent: Intent?) {
         when (intent?.action) {
-            ApplicationClass.PREVIOUS -> preNextSong(increment = false, context = content!!)
-            ApplicationClass.PLAY -> if (PlayerActivity.isPlaying) pauseMusic() else playMusic()
+            MusicApplication.PREVIOUS -> preNextSong(increment = false, context = content!!)
+            MusicApplication.PLAY -> if (PlayerActivity.isPlaying) pauseMusic() else playMusic()
 
-            ApplicationClass.NEXT -> preNextSong(increment = true, context = content!!)
+            MusicApplication.NEXT -> preNextSong(increment = true, context = content!!)
 
-            ApplicationClass.EXIT -> {
+            MusicApplication.EXIT -> {
                 exitApplication()
             }
         }
@@ -46,21 +47,21 @@ class NotificationReceiver : BroadcastReceiver() {
 
         //装载播放界面的专辑以及歌曲名
         Glide.with(context)
-            .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].artUri)
+            .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].imageUrl)
             .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
             .into(PlayerActivity.binding.songImgPA)
         PlayerActivity.binding.songNamePA.text =
-            PlayerActivity.musicListPA[PlayerActivity.songPosition].title
+            PlayerActivity.musicListPA[PlayerActivity.songPosition].name
 
         Glide.with(context)
-            .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].artUri)
+            .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].imageUrl)
             .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
             .into(NowPlaying.binding.songImgNP)
         NowPlaying.binding.songNameNP.text =
-            PlayerActivity.musicListPA[PlayerActivity.songPosition].title
+            PlayerActivity.musicListPA[PlayerActivity.songPosition].name
         playMusic()
         PlayerActivity.fIndex =
-            favouriteChecker(PlayerActivity.musicListPA[PlayerActivity.songPosition].id)
+            favouriteChecker(PlayerActivity.musicListPA[PlayerActivity.songPosition].id.toString())
         /*if (PlayerActivity.isFavourite) {
             PlayerActivity.binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
         } else {

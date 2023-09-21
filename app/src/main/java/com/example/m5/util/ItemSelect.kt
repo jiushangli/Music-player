@@ -18,6 +18,7 @@ import com.example.m5.activity.PlayerActivity
 import com.example.m5.activity.PlaylistActivity
 import com.example.m5.activity.PlaylistDetails
 import com.example.m5.adapter.PlaylistViewAdapter
+import com.example.m5.data.StandardSongData
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -45,7 +46,7 @@ fun showItemSelectDialog(context: Context, position: Int) {
         }
 
         is MainActivity -> {
-            music = MainActivity.MusicListMA[position]
+            music = MainActivity.MusicListMAX[position]
             dialog.findViewById<RelativeLayout>(R.id.deleteFromPlaylist)?.visibility = View.GONE
         }
     }
@@ -108,7 +109,7 @@ fun showItemSelectDialog(context: Context, position: Int) {
 
     dialog.findViewById<RelativeLayout>(R.id.deleteForever)?.setOnClickListener {
         //在控制台打印
-        if (deleteMusic(music.path))
+        if (deleteMusic(music.localInfo?.path.toString()))
             Toast.makeText(context, "删除成功", Toast.LENGTH_SHORT).show()
         else
             Toast.makeText(context, "还没删除", Toast.LENGTH_SHORT).show()
@@ -117,20 +118,20 @@ fun showItemSelectDialog(context: Context, position: Int) {
 }
 
 //装载music_item
-fun showPlaylistSelectDialogMusic(dialog: BottomSheetDialog, context: Context, music: Music) {
+fun showPlaylistSelectDialogMusic(dialog: BottomSheetDialog, context: Context, music: StandardSongData) {
     dialog.findViewById<ShapeableImageView>(R.id.imageMV)?.let {
         Glide.with(context)
-            .load(music.artUri)
+            .load(music.imageUrl)
             .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
             .into(it)
     }
     dialog.findViewById<TextView>(R.id.songNameISD)?.text =
-        music.title
+        music.name
     dialog.findViewById<TextView>(R.id.songArtistISD)?.text =
-        music.artist
+        music.artists?.get(0)?.name
 }
 
-fun showChoosePlaylistDialog(context: Context, music: Music) {
+fun showChoosePlaylistDialog(context: Context, music: StandardSongData) {
     val dialog = BottomSheetDialog(context)
     dialog.setContentView(R.layout.choose_playlist_dialog)
     dialog.show()

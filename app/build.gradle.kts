@@ -2,6 +2,8 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.kotlinAndroid)
+    id ("kotlin-parcelize")
+
 }
 
 android {
@@ -90,6 +92,7 @@ dependencies {
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0")
     implementation ("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
 
+    implementation (libs.androidx.room.runtime)
 
 
 }

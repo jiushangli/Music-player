@@ -18,7 +18,7 @@ import java.io.ByteArrayOutputStream
 
 class QrLoginActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProvider(this).get(QrLoginActivityViewModel::class.java) }
+    private val viewModel by lazy { ViewModelProvider(this)[QrLoginActivityViewModel::class.java] }
 
     private lateinit var binding: ActivityQrLoginBinding
 

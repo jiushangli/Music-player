@@ -1,4 +1,3 @@
-/*
 package com.example.m5.adapter
 
 import android.annotation.SuppressLint
@@ -12,6 +11,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.activity.FavouriteActivity
+import com.example.m5.activity.FeedbackActivity
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
 import com.example.m5.activity.PlaylistActivity
@@ -21,13 +21,13 @@ import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.util.Music
 import com.example.m5.util.showItemSelectDialog
 
-class MusicAdapter(
-    private val context: Context, private var musicList: ArrayList<Music>,
+class MusicAdapterX(
+    private val context: Context, private var musicList: ArrayList<StandardSongData>,
     private val playlistDetails: Boolean = false,
     private val selectionActivity: Boolean = false,
     private val favouriteActivity: Boolean = false,
     private val from: String = ""
-) : RecyclerView.Adapter<MusicAdapter.MyHolder>() {
+) : RecyclerView.Adapter<MusicAdapterX.MyHolder>() {
 
     class MyHolder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
         val title = binding.songNameMV
@@ -35,14 +35,13 @@ class MusicAdapter(
         val image = binding.imageMV
         val root = binding.root
         val moreAction = binding.moreAction
-
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyHolder {
         return MyHolder(MusicViewBinding.inflate(LayoutInflater.from(context), parent, false))
     }
 
-    private fun addSong(song: StandardSongData): Boolean {
+/*    private fun addSong(song: Music): Boolean {
         val playlist = if (from == "favouriteActivity")
             FavouriteActivity.favouriteSongs
         else
@@ -58,15 +57,14 @@ class MusicAdapter(
         }
         playlist.add(song)
         return true
-    }
+    }*/
 
     override fun onBindViewHolder(holder: MyHolder, position: Int) {
-        holder.title.text = musicList[position].title
-        holder.artist.text = musicList[position].artist
-//        holder.duration.text = formatDuration(musicList[position].duration)
+        holder.title.text = musicList[position].name
+        holder.artist.text = musicList[position].artists?.get(0)?.name
         //加载图片
         Glide.with(context)
-            .load(musicList[position].artUri)
+            .load(musicList[position].imageUrl)
             .apply(RequestOptions().placeholder(R.drawable.moni2).centerCrop())
             .into(holder.image)
 
@@ -74,7 +72,6 @@ class MusicAdapter(
             holder.moreAction.setOnClickListener {
                 showItemSelectDialog(context, position)
             }
-
 
 
         when {
@@ -90,7 +87,7 @@ class MusicAdapter(
                 }
             }
 
-            selectionActivity -> {
+/*            selectionActivity -> {
                 holder.root.setOnClickListener {
                     if (addSong(musicList[position])) {
                         holder.root.setBackgroundColor(
@@ -107,7 +104,7 @@ class MusicAdapter(
                             )
                         )
                 }
-            }
+            }*/
 
             else ->
                 holder.root.setOnClickListener {
@@ -117,9 +114,9 @@ class MusicAdapter(
                             pos = position
                         )
 
-                        musicList[position].id == PlayerActivity.nowPlayingId
+              /*          musicList[position].id == PlayerActivity.nowPlayingId
                         -> sendIntent(ref = "NowPlaying", pos = PlayerActivity.songPosition)
-
+*/
                         else -> sendIntent(ref = "MusicAdapter", pos = position)
                     }
                 }
@@ -131,7 +128,7 @@ class MusicAdapter(
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    fun updateMusicList(searchList: ArrayList<Music>) {
+    fun updateMusicList(searchList: ArrayList<StandardSongData>) {
         musicList = ArrayList()
         musicList.addAll(searchList)
         notifyDataSetChanged()
@@ -144,12 +141,11 @@ class MusicAdapter(
         ContextCompat.startActivity(context, intent, null)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
+/*    @SuppressLint("NotifyDataSetChanged")
     fun refreshPlaylist() {
         musicList = ArrayList()
         musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
         notifyDataSetChanged()
-    }
+    }*/
 
 }
-*/

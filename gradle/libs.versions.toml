@@ -16,12 +16,14 @@ appcompat = "1.6.1"
 material = "1.9.0"
 constraintlayout = "2.1.4"
 media = "1.6.0"
+room-runtime = "2.5.2"
 viewpager2 = "1.0.0"
 
 [libraries]
 android-activation = { module = "com.sun.mail:android-activation", version.ref = "android-mail" }
 android-mail = { module = "com.sun.mail:android-mail", version.ref = "android-mail" }
 androidx-media = { module = "androidx.media:media", version.ref = "media" }
+androidx-room-runtime = { module = "androidx.room:room-runtime", version.ref = "room-runtime" }
 androidx-viewpager2 = { module = "androidx.viewpager2:viewpager2", version.ref = "viewpager2" }
 blurimageviewlib = { module = "com.wingjay:blurimageviewlib", version.ref = "blurimageviewlib" }
 blurkit = { module = "io.alterac.blurkit:blurkit", version.ref = "blurkit" }

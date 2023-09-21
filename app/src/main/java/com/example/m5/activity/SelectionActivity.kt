@@ -4,15 +4,15 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.m5.adapter.MusicAdapter
+import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.databinding.ActivitySelectionBinding
+import com.example.m5.ui.searchMusic.MusicAdapter
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 
 class SelectionActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySelectionBinding
-    private lateinit var adapter: MusicAdapter
-
+    private lateinit var adapter: MusicAdapterX
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,7 +28,7 @@ class SelectionActivity : AppCompatActivity() {
         binding.selectionRV.setItemViewCacheSize(10)
         binding.selectionRV.setHasFixedSize(true)
         binding.selectionRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapter(this, MainActivity.MusicListMA, selectionActivity = true,from = from)
+        adapter = MusicAdapterX(this, MainActivity.MusicListMAX, selectionActivity = true,from = from)
         binding.selectionRV.adapter = adapter
 
         //搜索框监听
@@ -38,8 +38,8 @@ class SelectionActivity : AppCompatActivity() {
                 MainActivity.musicListSearch = ArrayList()
                 if (newText != null) {
                     val userInput = newText.lowercase()
-                    for(song in MainActivity.MusicListMA){
-                        if(song.title.lowercase().contains(userInput)){
+                    for(song in MainActivity.MusicListMAX){
+                        if(song.name?.lowercase()?.contains(userInput) == true){
                             MainActivity.musicListSearch.add(song)
                         }
                     }

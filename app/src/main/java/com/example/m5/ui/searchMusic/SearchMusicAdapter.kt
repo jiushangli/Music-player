@@ -14,6 +14,7 @@ import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
 import com.example.m5.activity.PlaylistActivity
 import com.example.m5.activity.PlaylistDetails
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.logic.model.Song
 import com.example.m5.util.Music
@@ -89,7 +90,7 @@ class SearchMusicAdapter(
         notifyDataSetChanged()
     }*/
 
-    private fun addSong(song: Music): Boolean {
+    private fun addSong(song: StandardSongData): Boolean {
         val playlist =
             PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
 

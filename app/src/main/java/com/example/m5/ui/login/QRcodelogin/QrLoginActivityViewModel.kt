@@ -8,20 +8,16 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
-import android.renderscript.ScriptGroup.Input
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.m5.MusicApplication
 import com.example.m5.logic.Repository
-import com.example.m5.logic.model.LoginCodeStatusResponse
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
 import java.util.Base64
-import java.util.TimeZone
-import kotlin.concurrent.thread
 
 class QrLoginActivityViewModel: ViewModel() {
 
@@ -65,8 +61,6 @@ class QrLoginActivityViewModel: ViewModel() {
     fun getCodeStatus(key: String){
         codeStatusliveData.value = key
     }
-
-
 
 
     //图像解码

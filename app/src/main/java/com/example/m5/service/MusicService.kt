@@ -14,12 +14,12 @@ import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import com.example.m5.util.ApplicationClass
-import com.example.m5.util.NotificationReceiver
+import com.example.m5.MusicApplication
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
 import com.example.m5.frag.NowPlaying
+import com.example.m5.util.NotificationReceiver
 import com.example.m5.util.formatDuration
 import com.example.m5.util.getImgArt
 
@@ -61,22 +61,22 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         val prevIntent = Intent(
             baseContext,
             NotificationReceiver::class.java
-        ).setAction(ApplicationClass.PREVIOUS)
+        ).setAction(MusicApplication.PREVIOUS)
         val prevPendingIntent = PendingIntent.getBroadcast(baseContext, 0, prevIntent, flag)
 
         val playIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ApplicationClass.PLAY)
+            Intent(baseContext, NotificationReceiver::class.java).setAction(MusicApplication.PLAY)
         val playPendingIntent = PendingIntent.getBroadcast(baseContext, 0, playIntent, flag)
 
         val nextIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ApplicationClass.NEXT)
+            Intent(baseContext, NotificationReceiver::class.java).setAction(MusicApplication.NEXT)
         val nextPendingIntent = PendingIntent.getBroadcast(baseContext, 0, nextIntent, flag)
 
         val exitIntent =
-            Intent(baseContext, NotificationReceiver::class.java).setAction(ApplicationClass.EXIT)
+            Intent(baseContext, NotificationReceiver::class.java).setAction(MusicApplication.EXIT)
         val exitPendingIntent = PendingIntent.getBroadcast(baseContext, 0, exitIntent, flag)
 
-        val imgArt = getImgArt(PlayerActivity.musicListPA[PlayerActivity.songPosition].path)
+        val imgArt = getImgArt(PlayerActivity.musicListPA[PlayerActivity.songPosition].localInfo?.path!!)
         val image = if (imgArt != null) {
             BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
         } else {
@@ -84,10 +84,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         }
 
         val notification =
-            androidx.core.app.NotificationCompat.Builder(baseContext, ApplicationClass.CHANNEL_ID)
+            androidx.core.app.NotificationCompat.Builder(baseContext, MusicApplication.CHANNEL_ID)
                 .setContentIntent(contentIntent)
-                .setContentTitle(PlayerActivity.musicListPA[PlayerActivity.songPosition].title)
-                .setContentText(PlayerActivity.musicListPA[PlayerActivity.songPosition].artist)
+                .setContentTitle(PlayerActivity.musicListPA[PlayerActivity.songPosition].name)
+                .setContentText(PlayerActivity.musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name)
                 .setSmallIcon(R.drawable.music_icon)
                 .setLargeIcon(image)
                 .setStyle(
@@ -126,7 +126,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         try {
             if (mediaPlayer == null) mediaPlayer = MediaPlayer()
             mediaPlayer!!.reset()
-            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].path)
+            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].localInfo?.path)
             mediaPlayer!!.prepare()
             PlayerActivity.binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
             showNotification(R.drawable.ic_pause,1F)
@@ -134,7 +134,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PlayerActivity.binding.tvSeekBarEnd.text = formatDuration(mediaPlayer!!.duration.toLong())
             PlayerActivity.binding.seekBarPA.progress = 0
             PlayerActivity.binding.seekBarPA.max = mediaPlayer!!.duration
-            PlayerActivity.nowPlayingId = PlayerActivity.musicListPA[PlayerActivity.songPosition].id
+            PlayerActivity.nowPlayingId = PlayerActivity.musicListPA[PlayerActivity.songPosition].id.toString()
         }catch (e: Exception){return}
     }
     fun seekBarSetup() {
@@ -157,14 +157,15 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             showNotification(R.drawable.play_icon,0F)
 
         }
-        /*else {
+else {
             //继续音乐
             PlayerActivity.binding.playPauseBtnPA.setBackgroundResource(R.drawable.ic_pause)
             NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
             showNotification(R.drawable.pause_icon,1F)
             PlayerActivity.isPlaying = true
             mediaPlayer!!.start()
-        }*/
+        }
+
     }
 
     //for making persistent
