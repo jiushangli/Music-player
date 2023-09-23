@@ -1,4 +1,4 @@
-package com.example.m5.ui.NetEaseCloudMusic
+package com.example.m5.ui.netEaseCloudMusic
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -11,7 +11,7 @@ import com.bumptech.glide.Glide
 import com.example.m5.R
 import com.example.m5.logic.model.HotMusic
 
-class HotMiusicAdapter(val musics: List<HotMusic>): RecyclerView.Adapter<HotMiusicAdapter.ViewHolder>() {
+class HotMusicAdapter(private val musics: List<HotMusic>): RecyclerView.Adapter<HotMusicAdapter.ViewHolder>() {
 
     inner class ViewHolder(view: View): RecyclerView.ViewHolder(view){
         val hotMusicImage1: ImageView = view.findViewById(R.id.hotMusicImage1)

@@ -1,22 +1,18 @@
 package com.example.m5.ui.recommend
 
-import android.app.Notification
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
 import com.example.m5.databinding.ActivityRecommendBinding
-import com.example.m5.logic.model.DailySong
-import com.example.m5.ui.NetEaseCloudMusic.ViewPagerAdapter
 import com.example.m5.ui.login.QRcodelogin.QrLoginActivityViewModel
 
 class RecommendActivity : AppCompatActivity() {
 
-    private val viewMode by lazy { ViewModelProvider(this).get(RecommendActivityViewModel::class.java) }
+    private val viewMode by lazy { ViewModelProvider(this)[RecommendActivityViewModel::class.java] }
 
     private lateinit var binding: ActivityRecommendBinding
 
@@ -38,15 +34,15 @@ class RecommendActivity : AppCompatActivity() {
 
 
         //数据绑定
-        viewMode.recommendFocus.observe(this, Observer { result->
+        viewMode.recommendFocus.observe(this) { result->
             val recommend = result.getOrNull()
-            Log.d("hucheng", "${recommend.toString()}")
+            Log.d("hucheng", recommend.toString())
             if (recommend != null){
                 viewMode.dailySongs.clear()
                 viewMode.dailySongs.addAll(recommend.data.dailySongs)
                 adapterRecommend.notifyDataSetChanged()
             }
-        })
+        }
 
         //获取每日推荐
         viewMode.getRecommend(QrLoginActivityViewModel.cookie)

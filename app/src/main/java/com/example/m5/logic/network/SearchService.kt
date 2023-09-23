@@ -15,5 +15,7 @@ interface SearchService {
     @GET("/song/url/v1")
     fun getUri(@Query("id")id: Long, @Query("level")level: String): Call<SongResponse>
 
+    @GET("/song/url/v1")
+    fun getUriX(@Query("id")id: Long,@Query("level")level: String): Call<SongResponse>
 
 }

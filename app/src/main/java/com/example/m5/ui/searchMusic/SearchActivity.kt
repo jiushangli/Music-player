@@ -2,23 +2,28 @@ package com.example.m5.ui.searchMusic
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
+import com.example.m5.activity.PlayerActivity
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivitySearchBinding
 import com.example.m5.logic.model.Data
+import com.example.m5.temp.playMusicX
 import com.example.m5.ui.player.PlayMusicViewModel
 
 class SearchActivity : AppCompatActivity() {
 
     val viewModel by lazy { ViewModelProvider(this)[SearchViewModel::class.java] }
-    private lateinit var binding: ActivitySearchBinding
+    lateinit var binding: ActivitySearchBinding
 
     private lateinit var adapterMusicList: SearchMusicAdapter
 
@@ -85,10 +90,16 @@ class SearchActivity : AppCompatActivity() {
             val song: Data? = (result as Result<Data>).getOrNull()
             Log.d("hucheng", "返回内容${song.toString()}")
             song?.let { noNullSong->
-                Log.d("hucheng", "准备播放")
-                PlayMusicViewModel.position++
-                PlayMusicViewModel.musicList.add(PlayMusicViewModel.position, noNullSong)
-                Log.d("hucheng", "musicLists: ${PlayMusicViewModel.musicList[PlayMusicViewModel.position].toString()}")
+
+                //把音乐转成标准格式,传入参数url实现
+                viewModel.musicList[viewModel.postion].let {
+                    PlayerActivity.musicListNE.add(it.switchToStandard(noNullSong.url))
+                }
+
+                val intent = Intent(this, PlayerActivity::class.java).setAction("your.custom.action")
+                intent.putExtra("index", viewModel.postion)
+                intent.putExtra("class", "SearchActivity")
+                ContextCompat.startActivity(this, intent, null)
             }
         }
 

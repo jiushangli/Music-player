@@ -34,7 +34,7 @@ object Repository {
         } catch (e: Exception) {
             Log.d("hucheng", "Repository error")
             Log.d("hucheng", e.toString())
-            Result.failure<List<Song>>(e)
+            Result.failure(e)
         }
         emit(result)
     }
@@ -44,6 +44,7 @@ object Repository {
         val result = try {
             val musicResponse = MusicNetwork.getUri(id, level)
             if (musicResponse.code == "200") {
+                Log.d("hucheng", "${musicResponse.data[0].url}")
                 val song = musicResponse.data[0]
                 Result.success(song)
             } else {
@@ -109,9 +110,9 @@ object Repository {
     fun getKey(timestamp: String) = liveData(Dispatchers.IO) {
         val result = try {
             val key = MusicNetwork.getKey(timestamp)
-            if (key.code == "200"){
+            if (key.code == "200") {
                 Result.success(key.data)
-            }else{
+            } else {
                 Result.failure(
                     RuntimeException(
                         "error"
@@ -119,20 +120,20 @@ object Repository {
                 )
             }
 
-        }catch (e: Exception){
-            Result.failure<KeyData>(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
 
         emit(result)
     }
 
-    fun getCode(key: String, timestamp: String) = liveData(Dispatchers.IO){
+    fun getCode(key: String, timestamp: String) = liveData(Dispatchers.IO) {
 
         val result = try {
-            val Qrcode = MusicNetwork.getCode(key, timestamp)
-            if(Qrcode.code == "200"){
-                Result.success(Qrcode.data)
-            }else{
+            val qrcode = MusicNetwork.getCode(key, timestamp)
+            if (qrcode.code == "200") {
+                Result.success(qrcode.data)
+            } else {
                 Result.failure(
                     RuntimeException(
                         "error"
@@ -140,8 +141,8 @@ object Repository {
                 )
             }
 
-        }catch (e: Exception){
-            Result.failure<CodeData>(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
 
         emit(result)
@@ -150,21 +151,22 @@ object Repository {
     //查询二维码扫码情况
     fun getCodeStatue(key: String) = liveData(Dispatchers.IO) {
 
-        while (true){
+        while (true) {
             val result = try {
 
                 Log.d("hucheng", "key : $key")
-                val qrStatus = MusicNetwork.getCodeStatue(key, System.currentTimeMillis().toString())
+                val qrStatus =
+                    MusicNetwork.getCodeStatue(key, System.currentTimeMillis().toString())
 
-                if (qrStatus?.code == "803"){
+                if (qrStatus.code == "803") {
                     Result.success(qrStatus)
-                }else{
+                } else {
                     Thread.sleep(1000)
                     continue
                 }
 
-            }catch (e: Exception){
-                Result.failure<LoginCodeStatusResponse>(e)
+            } catch (e: Exception) {
+                Result.failure(e)
             }
 
             emit(result)
@@ -172,60 +174,44 @@ object Repository {
         }
 
 
-
     }
 
     //获取登录状态
-    fun getStatus(timestamp: String, cookie: String) = liveData(Dispatchers.IO){
+    fun getStatus(timestamp: String, cookie: String) = liveData(Dispatchers.IO) {
         val result = try {
 
             val status = MusicNetwork.getStatus(timestamp, cookie)
 
             Log.d("hucheng", "timestamp: $timestamp  status: $status")
+            Result.success(status)
 
-            if (status != null){
-                Result.success(status)
-            }else{
-                Result.failure(
-                    RuntimeException(
-                        "error"
-                    )
-                )
-            }
-
-        }catch (e: Exception){
-            Result.failure<LoginStatusResponse>(e)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
 
         emit(result)
 
     }
-
-
-
 
 
     //获取每日推荐
     fun getRecommend(cookie: String) = liveData(Dispatchers.IO) {
         val result = try {
             val recommend = MusicNetwork.getRecommend(cookie)
-            if (recommend.code == "200"){
+            if (recommend.code == "200") {
                 Result.success(recommend)
-            }else{
+            } else {
                 Result.failure(
                     RuntimeException(
                         "error"
                     )
                 )
             }
-        }catch (e: Exception){
+        } catch (e: Exception) {
             Result.failure<RecommendSongsResponse>(e)
         }
         emit(result)
     }
-
-
-
 
 
     //持久化层
@@ -234,7 +220,6 @@ object Repository {
     fun getSavedCookie() = CookieDao.getSavedCookie()
 
     fun isCookieSaved() = CookieDao.isCookieSaved()
-
 
 
 }

@@ -98,7 +98,7 @@
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
         <activity
-            android:name=".ui.NetEaseCloudMusic.NeBrowseActivity"
+            android:name=".ui.netEaseCloudMusic.NeBrowseActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />

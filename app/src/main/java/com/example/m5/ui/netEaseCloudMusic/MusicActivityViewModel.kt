@@ -1,4 +1,4 @@
-package com.example.m5.ui.NetEaseCloudMusic
+package com.example.m5.ui.netEaseCloudMusic
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -8,23 +8,23 @@ import com.example.m5.logic.model.HotMusic
 import com.example.m5.logic.model.MusicAl
 import com.example.m5.logic.model.PlayList
 
-class MusicAcitivityViewModel: ViewModel() {
+class MusicActivityViewModel: ViewModel() {
 
-    private val refreshliveData = MutableLiveData<Any?>()
+    private val refreshLiveData = MutableLiveData<Any?>()
 
 
 
     var playLists = ArrayList<PlayList>()
     var hotMusicLists = ArrayList<HotMusic>()
-    var newMusicesAls = ArrayList<MusicAl>()
+    var newMusicAls = ArrayList<MusicAl>()
 
 
-    val mainLiveData = Transformations.switchMap(refreshliveData){
+    val mainLiveData = Transformations.switchMap(refreshLiveData){
         Repository.refreshNc()
     }
 
     fun refresh(){
-        refreshliveData.value = refreshliveData.value
+        refreshLiveData.value = refreshLiveData.value
     }
 
 

@@ -1,31 +1,28 @@
-package com.example.m5.ui.NetEaseCloudMusic
+package com.example.m5.ui.netEaseCloudMusic
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.graphics.Rect
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.m5.R
 import com.example.m5.databinding.ActivityNcBinding
-import com.example.m5.ui.login.QRcodelogin.QrLoginActivity
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 
 
 class NeBrowseActivity : AppCompatActivity() {
 
-    private val viewModel by lazy { ViewModelProvider(this)[MusicAcitivityViewModel::class.java] }
+    private val viewModel by lazy { ViewModelProvider(this)[MusicActivityViewModel::class.java] }
 
     private lateinit var binding: ActivityNcBinding
 
     private lateinit var adapterPlayList: PlayListsAdapter
-    private lateinit var adapterHotMusic: HotMiusicAdapter
+    private lateinit var adapterHotMusic: HotMusicAdapter
     private lateinit var adapterNewMusicAls: ViewPagerAdapter
 
 
@@ -37,7 +34,7 @@ class NeBrowseActivity : AppCompatActivity() {
     @SuppressLint("ResourceType", "NotifyDataSetChanged")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setTheme(R.style.coolRed)
+        setTheme(R.style.coolBlack)
         instance = this
         binding = ActivityNcBinding.inflate(layoutInflater)
         setContentView(binding.root)
@@ -81,7 +78,7 @@ class NeBrowseActivity : AppCompatActivity() {
         binding.hotMusics.adapter = adapterHotMusic*/
 
 
-        adapterNewMusicAls = ViewPagerAdapter(viewModel.newMusicesAls)
+        adapterNewMusicAls = ViewPagerAdapter(viewModel.newMusicAls)
 /*        binding.loopViewPager.apply {
             adapter = adapterNewMusicAls
         }*/
@@ -91,20 +88,20 @@ class NeBrowseActivity : AppCompatActivity() {
 
 
 
-        viewModel.mainLiveData.observe(this, Observer { result->
+        viewModel.mainLiveData.observe(this) { result->
             val mainNcResponse = result.getOrNull()
             if(mainNcResponse != null){
                 viewModel.playLists.addAll(mainNcResponse.playLists)
                 viewModel.hotMusicLists.addAll(mainNcResponse.hotMusics)
-                viewModel.newMusicesAls.addAll(mainNcResponse.newMusicesAls)
+                viewModel.newMusicAls.addAll(mainNcResponse.newMusicesAls)
                 Log.d("hucheng", "Activity palylists ${viewModel.playLists}")
                 Log.d("hucheng", "Activity hotmusics ${viewModel.hotMusicLists}")
-                Log.d("hucheng", "Activity newmusicAl ${viewModel.newMusicesAls}")
+                Log.d("hucheng", "Activity newmusicAl ${viewModel.newMusicAls}")
                 adapterPlayList.notifyDataSetChanged()
                 adapterPlayList.notifyDataSetChanged()
                 adapterNewMusicAls.notifyDataSetChanged()
             }
-        })
+        }
 
 
     }
