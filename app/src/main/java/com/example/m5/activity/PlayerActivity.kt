@@ -37,7 +37,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
     companion object {
         var musicListPA = ArrayList<StandardSongData>()
+        var musicListNE = ArrayList<StandardSongData>()
         var songPosition: Int = 0
+        var songPositionNE: Int = 0
 
         //?的含义是可以为空,!的含义是非空断言,!!的含义是非空断言,如果为空就抛出异常
         var musicService: MusicService? = null
@@ -54,6 +56,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         var fIndex: Int = -1
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setTheme(R.style.coolBlue)
@@ -108,7 +111,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             override fun onStartTrackingTouch(p0: SeekBar?) = Unit
             override fun onStopTrackingTouch(p0: SeekBar?) = Unit
         })
-        binding.repeatBtnPA.setOnClickListener() {
+        binding.repeatBtnPA.setOnClickListener {
             if (!repeat) {
                 repeat = true
                 binding.repeatBtnPA.setImageResource(R.drawable.repeat_one_icon)
@@ -147,7 +150,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }
         }
         //分享音乐文件
-        binding.shareBtnPA.setOnClickListener() {
+        binding.shareBtnPA.setOnClickListener {
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
@@ -197,6 +200,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 imageUrl = "artUriC",
                 artistList,
                 null,
+                null,
                 StandardSongData.LocalInfo(duration = duration!!, path = path),
                 null
             )
@@ -228,7 +232,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
             //这里在设置播放器
             musicService!!.mediaPlayer!!.reset()
-            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].localInfo?.path)
+            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].url)
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             isPlaying = true
@@ -281,6 +285,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 initServiceAndPlaylist(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist, shuffle = true)
             "PlaylistDetailsSequence"->
                 initServiceAndPlaylist(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist, shuffle = false)
+
+            "SearchActivity"->{
+                initServiceAndPlaylist(musicListNE, shuffle = false)
+                songPosition = intent.getIntExtra("index", 0)
+            }
         }
     }
 

@@ -26,6 +26,10 @@ data class StandardSongData(
     var imageUrl: String?, // 图片 url
     var artists: ArrayList<StandardArtistData>?, // 艺术家
 
+
+    var url: String? = null,
+
+
     @Embedded
     var neteaseInfo: NeteaseInfo?,
 
@@ -38,7 +42,7 @@ data class StandardSongData(
 
     @Ignore
     constructor() : this(SOURCE_NETEASE,
-    null, null, null, null, null, null, null)
+    null, null, null, null, null, null, null, null)
 
     /**
      * 标准艺术家数据

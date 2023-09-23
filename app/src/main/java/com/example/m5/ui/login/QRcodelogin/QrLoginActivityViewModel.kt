@@ -8,12 +8,14 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.MediaStore
+import android.util.Log
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.m5.MusicApplication
 import com.example.m5.logic.Repository
+import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivityViewModel
 import java.io.File
 import java.io.InputStream
 import java.io.OutputStream
@@ -30,10 +32,6 @@ class QrLoginActivityViewModel: ViewModel() {
     lateinit var key: String
 //    private lateinit var qrCode: String
     lateinit var bitmap: Bitmap
-
-    companion object{
-        var cookie: String? = null
-    }
 
 
     val keyFocusData = Transformations.switchMap(keyliveData){timestamp->

@@ -10,7 +10,7 @@ import kotlin.coroutines.suspendCoroutine
 
 object MusicNetwork {
 
-    private val searchService = ServiceCreator.create<SearchService>()
+     val searchService = ServiceCreator.create<SearchService>()
     private val mainService = ServiceCreator.create<MainService>()
     private val loginService = ServiceCreator.create<LoginService>()
     private val RecommendService = ServiceCreator.create<RecommendService>()
@@ -18,6 +18,7 @@ object MusicNetwork {
 
     suspend fun searchMusic(keywords: String) = searchService.searchMusic(keywords).await()
     suspend fun getUri(id: Long, level: String) = searchService.getUri(id, level).await()
+    suspend fun getUriX(id: Long, level: String) = searchService.getUriX(id, level).await()
 
     suspend fun getHighQuality() = mainService.mainHighQuality().await()
 
@@ -52,7 +53,7 @@ object MusicNetwork {
                 }
 
                 override fun onFailure(call: Call<T>, t: Throwable) {
-                    Log.d("hucheng", "network error: ${t.toString()}")
+                    Log.d("hucheng", "network error: $t")
                     continuation.resumeWithException(t)
                 }
             })

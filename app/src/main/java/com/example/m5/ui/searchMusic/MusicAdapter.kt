@@ -50,9 +50,8 @@ class MusicAdapter(val musicList: List<Song>): RecyclerView.Adapter<MusicAdapter
 
 
 
-        Log.d("hucheng", "url: ${music.al.picUrl}")
         Glide.with(SearchActivity.instance!!)
-            .load(music.al.picUrl)
+            .load(music.al?.picUrl)
             .into(holder.musicPicture)
 
     }

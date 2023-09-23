@@ -11,7 +11,7 @@ import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
 import com.example.m5.databinding.FragmentNeteaseEverythingBinding
-import com.example.m5.ui.NetEaseCloudMusic.NeBrowseActivity
+import com.example.m5.ui.netEaseCloudMusic.NeBrowseActivity
 import com.example.m5.ui.recommend.RecommendActivity
 import com.example.m5.ui.searchMusic.SearchActivity
 

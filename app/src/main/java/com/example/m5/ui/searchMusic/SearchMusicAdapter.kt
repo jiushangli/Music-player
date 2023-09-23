@@ -10,15 +10,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
-import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
 import com.example.m5.activity.PlaylistActivity
 import com.example.m5.activity.PlaylistDetails
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.logic.model.Song
-import com.example.m5.util.Music
-import com.example.m5.util.showItemSelectDialog
+
 
 class SearchMusicAdapter(
     private val context: Context, private var musicList: ArrayList<Song>,
@@ -43,26 +41,22 @@ class SearchMusicAdapter(
 //        holder.duration.text = formatDuration(musicList[position].duration)
         //加载图片
         Glide.with(context)
-            .load(musicList[position].al.picUrl)
+            .load(musicList[position].al?.picUrl)
             .apply(RequestOptions().placeholder(R.drawable.moni2).centerCrop())
             .into(holder.image)
         holder.moreAction.setOnClickListener {
-            showItemSelectDialog(context, position)
+//            showItemSelectDialog(context, position)
         }
-/*        holder.root.setOnClickListener {
-            when {
-                MainActivity.search -> sendIntent(
-                    ref = "MusicAdapterSearch",
-                    pos = position
-                )
+        holder.root.setOnClickListener {
+            SearchActivity.instance!!.viewModel.postion = position
+            SearchActivity.instance!!.viewModel.getUri(Pair(musicList[position].id, "standard"))
 
-                musicList[position].id == PlayerActivity.nowPlayingId
-                -> sendIntent(ref = "NowPlaying", pos = PlayerActivity.songPosition)
 
-                else -> sendIntent(ref = "MusicAdapter", pos = position)
-            }
 
-        }*/
+
+
+
+        }
     }
 
     override fun getItemCount(): Int {
@@ -83,27 +77,7 @@ class SearchMusicAdapter(
         ContextCompat.startActivity(context, intent, null)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-/*    fun refreshPlaylist() {
-        musicList = ArrayList()
-        musicList = PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
-        notifyDataSetChanged()
-    }*/
 
-    private fun addSong(song: StandardSongData): Boolean {
-        val playlist =
-            PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist
 
-        playlist.forEachIndexed { index, music ->
-            if (music.id == song.id) {
-                playlist.removeAt(
-                    index
-                )
-                return false
-            }
-        }
-        playlist.add(song)
-        return true
-    }
 
 }

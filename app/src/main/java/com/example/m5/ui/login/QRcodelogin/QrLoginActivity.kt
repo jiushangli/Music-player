@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.databinding.ActivityQrLoginBinding
+import com.example.m5.ui.AppConfig
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivityViewModel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
@@ -36,6 +37,8 @@ class QrLoginActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         install = this
+
+        Log.d("hucheng", "onCreate")
 
         //绑定
         //获取key
@@ -69,16 +72,25 @@ class QrLoginActivity : AppCompatActivity() {
 
         //监听扫码状态
         viewModel.codeStatusFocusData.observe(this, Observer { result->
-            val result = result.getOrNull()
-            QrLoginActivityViewModel.cookie = result?.cookie
-            Log.d("hucheng", "cookie : ${QrLoginActivityViewModel.cookie}")
-            NetEaseMineActivityViewModel.isLongined = true
-            Log.d("hucheng", "cookie: ${QrLoginActivityViewModel.cookie}")
-
-            //保存cookie
-            viewModel.saveCookie(QrLoginActivityViewModel.cookie!!)
+//            val cookie = result
+//            AppConfig.cookie = result?.cookie!!
+//            Log.d("hucheng", "cookie : ${AppConfig.cookie}")
+//            AppConfig.isLogined = true
+//            Log.d("hucheng", "cookie: ${AppConfig.cookie}")
+//
+//            //保存cookie
+//            viewModel.saveCookie(AppConfig.cookie!!)
+//            finish()
+            val cookieNow = result.getOrNull()
+            Log.d("hucheng", "返回的cookie：$cookieNow")
+            AppConfig.isChanged = false
+            Log.d("hucheng", "Appconfig cookie: ${AppConfig.cookie}")
+            viewModel.saveCookie(AppConfig.cookie)
             finish()
+
         })
+
+
 
 
 
@@ -106,4 +118,40 @@ class QrLoginActivity : AppCompatActivity() {
 
 
     }
+
+    override fun onRestart() {
+        super.onRestart()
+        Log.d("hucheng", "onRestart")
+        Log.d("hucheng", "${AppConfig.cookie}")
+
+//        if (AppConfig.cookie != null)
+//            finish()
+    }
+
+    override fun onStop() {
+        super.onStop()
+        Log.d("hucheng", "onStop")
+    }
+
+    override fun onStart() {
+        super.onStart()
+        Log.d("hucheng", "onStart")
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        Log.d("hucheng", "onDestroy")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        Log.d("hucheng", "onResume")
+    }
+
+    override fun onPause() {
+        super.onPause()
+        Log.d("hucheng", "onPause")
+    }
+
+
 }

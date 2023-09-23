@@ -1,4 +1,4 @@
-package com.example.m5.ui.NetEaseCloudMusic
+package com.example.m5.ui.netEaseCloudMusic
 
 import android.view.LayoutInflater
 import android.view.View

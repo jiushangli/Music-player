@@ -3,15 +3,12 @@ package com.example.m5.ui.netEaseMineActivity
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
 import androidx.lifecycle.Observer
-import androidx.lifecycle.VIEW_MODEL_STORE_OWNER_KEY
 import androidx.lifecycle.ViewModelProvider
 import com.example.m5.activity.MainActivity
 import com.example.m5.databinding.ActivityNetEaseMineBinding
+import com.example.m5.ui.AppConfig
 import com.example.m5.ui.login.QRcodelogin.QrLoginActivity
-import com.example.m5.ui.login.QRcodelogin.QrLoginActivityViewModel
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 
@@ -24,6 +21,8 @@ class NetEaseMineActivity : AppCompatActivity() {
     companion object{
         var install: NetEaseMineActivity? = null
     }
+
+    private var isOncreated: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,61 +48,63 @@ class NetEaseMineActivity : AppCompatActivity() {
 
 
         //绑定
+        //第一次进入这个页面：onCreate，不管isLogined是什么，都需要进行一次判断，或者说，这次判断就是用来决定isLogined的
         viewModel.statusFocusData.observe(this, Observer { result->
             val result = result.getOrNull()
             if(result?.data?.profile == null){
-                NetEaseMineActivityViewModel.isLongined = false
-                NetEaseMineActivityViewModel.uid = null
-                NetEaseMineActivityViewModel.nickname = null
-                NetEaseMineActivityViewModel.avatarUrl = null
-                Log.d("hucheng", "未登录")
+                //未登录
+                AppConfig.isLogined = false
+                //其实本来就是false了，这里再写一次只是为了更好明白逻辑
             }else if(result?.data?.profile != null){
-                Log.d("hucheng", "登陆了")
-                NetEaseMineActivityViewModel.isLongined = true
-                NetEaseMineActivityViewModel.uid = result?.data?.profile.userId
-                NetEaseMineActivityViewModel.nickname = result?.data?.profile.nickname
-                NetEaseMineActivityViewModel.avatarUrl = result?.data?.profile.avatarUrl
-                //登录状态
-                NetEaseMineActivityViewModel.loadPicture(NetEaseMineActivityViewModel.avatarUrl!!)
-                binding.usernameNMA.text = NetEaseMineActivityViewModel.nickname
+                //登录
 
-                //调用图片加载函数
-                Log.d("hucheng", "Activity avatarUrl: ${NetEaseMineActivityViewModel.avatarUrl}")
-                NetEaseMineActivityViewModel.loadPicture(NetEaseMineActivityViewModel.avatarUrl!!)
-
+                //这里的登录只记录信息
+                AppConfig.isLogined = true
+                result?.data?.profile.let { it->
+                    AppConfig.let { app->
+                        app.uid = it.userId
+                        app.nickname = it.nickname
+                        app.avatarUrl = it.avatarUrl
+                    }
+                }
+                //加载昵称图片
+                binding.usernameNMA.text = AppConfig.nickname
+                NetEaseMineActivityViewModel.loadPicture(AppConfig.avatarUrl!!)
             }
         })
 
 
 
-
-        //在创建时查询cookie，因为从登录页面回来之后cookie已经就有了，无需再次查询
-
+        //首次进来获取保存的cookie进行登陆状态查询(cookie没保存返回null)
         if (viewModel.isCookieSaved()){
-            QrLoginActivityViewModel.cookie = viewModel.getSavedCookie()
-            NetEaseMineActivityViewModel.isLongined = true
-        }else{
-            Log.d("hucheng", "未登录")
+            AppConfig.cookie = viewModel.getSavedCookie()!!
+            viewModel.getStatus(System.currentTimeMillis().toString(), viewModel.getSavedCookie()!!)
+        }
+        else{
+            AppConfig.cookie = ""
+            viewModel.getStatus(System.currentTimeMillis().toString(), "")
         }
 
-
-
+        isOncreated = true
 
     }
 
 
     override fun onResume() {
         super.onResume()
-        Log.d("hucheng", "onResume cookie: ${QrLoginActivityViewModel.cookie}")
 
-
-        if (QrLoginActivityViewModel.cookie == null){
-            NetEaseMineActivityViewModel.isLongined = false
-        }else{
-            viewModel.getStatus(System.currentTimeMillis().toString(), QrLoginActivityViewModel.cookie!!)
+        //如果经历了onCreate，就不查询，没经历就查询
+        if (!isOncreated){
+            viewModel.getStatus(System.currentTimeMillis().toString(), viewModel.getSavedCookie()!!)
         }
-        Log.d("hucheng", "onResume")
 
+        isOncreated = false
+
+        if (AppConfig.isLogined){
+
+        }else{
+
+        }
 
 
     }

@@ -7,6 +7,7 @@ import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
@@ -15,7 +16,7 @@ import com.example.m5.databinding.ActivityRecommendBinding
 import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.logic.model.DailySong
 
-class RecommendAdapter(val context: Context, val dailySongs: List<DailySong>): RecyclerView.Adapter<RecommendAdapter.Holder>() {
+class RecommendAdapter(val context: Context, private val dailySongs: List<DailySong>): RecyclerView.Adapter<RecommendAdapter.Holder>() {
 
     class Holder(binding: MusicViewBinding): RecyclerView.ViewHolder(binding.root){
         val title = binding.songNameMV
@@ -33,6 +34,7 @@ class RecommendAdapter(val context: Context, val dailySongs: List<DailySong>): R
 
         holder.itemView.setOnClickListener {
             //设置点击事件
+            Toast.makeText(context, "here", Toast.LENGTH_SHORT).show()
         }
 
         return holder
@@ -43,15 +45,15 @@ class RecommendAdapter(val context: Context, val dailySongs: List<DailySong>): R
     override fun onBindViewHolder(holder: Holder, position: Int) {
         holder.title.text = dailySongs[position].name
         holder.artist.text = dailySongs[position].ar[0].name+"-"+dailySongs[position].al.name
-        holder.artist.setTextSize(10F)
+        holder.artist.textSize = 10F
 
-        dailySongs[position].reason?.let { it->
+        dailySongs[position].reason.let {
             holder.songInf.text = it
             holder.songInf.visibility= View.VISIBLE
-//            holder.songInf.textColor = R.color.bordeaux_red
+    //            holder.songInf.textColor = R.color.bordeaux_red
             holder.songInf.setTextColor(R.color.bordeaux_red)
             holder.songInf.setTypeface(null, Typeface.BOLD)
-            holder.songInf.setTextSize(10F)
+            holder.songInf.textSize = 10F
         }
 
 

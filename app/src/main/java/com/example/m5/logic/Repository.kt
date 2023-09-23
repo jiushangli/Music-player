@@ -2,7 +2,7 @@ package com.example.m5.logic
 
 import android.util.Log
 import androidx.lifecycle.liveData
-import com.example.m5.logic.dao.CookieDao
+import com.example.m5.logic.dao.AppConfigDao
 import com.example.m5.logic.model.CodeData
 import com.example.m5.logic.model.KeyData
 import com.example.m5.logic.model.LoginCodeStatusResponse
@@ -11,6 +11,7 @@ import com.example.m5.logic.model.MainNcResponse
 import com.example.m5.logic.model.RecommendSongsResponse
 import com.example.m5.logic.model.Song
 import com.example.m5.logic.network.MusicNetwork
+import com.example.m5.ui.AppConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -149,30 +150,39 @@ object Repository {
 
     //查询二维码扫码情况
     fun getCodeStatue(key: String) = liveData(Dispatchers.IO) {
+        if (!AppConfig.isChanged){
 
-        while (true){
-            val result = try {
-
-                Log.d("hucheng", "key : $key")
-                val qrStatus = MusicNetwork.getCodeStatue(key, System.currentTimeMillis().toString())
-
-                if (qrStatus?.code == "803"){
-                    Result.success(qrStatus)
-                }else{
-                    Thread.sleep(1000)
-                    continue
+            while (true){
+                val result = try {
+                    val qrStatus = MusicNetwork.getCodeStatue(key, System.currentTimeMillis().toString())
+                    if (qrStatus.code == "803"){
+                        AppConfig.cookie = qrStatus.cookie
+                        AppConfig.isChanged = true
+                        Result.success(qrStatus.cookie)
+                    }else if (qrStatus.code == "800"){
+                        //二维码过期
+                        Result.failure(
+                            RuntimeException(
+                                "error"
+                            )
+                        )
+                    }else{
+                        Thread.sleep(1000)
+                        continue
+                    }
+                }catch (e: Exception){
+                    Result.failure<String>(e)
                 }
 
-            }catch (e: Exception){
-                Result.failure<LoginCodeStatusResponse>(e)
+                emit(result)
+                break
             }
 
+        }else{
+            Log.d("hucheng", "第二次启动")
+            val result = Result.success(AppConfig.cookie)
             emit(result)
-            break
         }
-
-
-
     }
 
     //获取登录状态
@@ -229,11 +239,18 @@ object Repository {
 
 
     //持久化层
-    fun saveCookie(cookie: String) = CookieDao.saveCookie(cookie)
+    fun saveCookie(cookie: String) = AppConfigDao.saveCookie(cookie)
 
-    fun getSavedCookie() = CookieDao.getSavedCookie()
+    fun getSavedCookie() = AppConfigDao.getSavedCookie()
 
-    fun isCookieSaved() = CookieDao.isCookieSaved()
+    fun isCookieSaved() = AppConfigDao.isCookieSaved()
+
+
+    fun saveUid(uid: Long) = AppConfigDao.saveUid(uid)
+
+    fun getSavedUid() = AppConfigDao.getSavedUid()
+
+    fun isUidSaved() = AppConfigDao.isUidSaved()
 
 
 
