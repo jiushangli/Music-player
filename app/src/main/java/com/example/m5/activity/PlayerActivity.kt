@@ -11,6 +11,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.IBinder
 import android.provider.MediaStore
+import android.util.Log
 import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.Toast
@@ -33,6 +34,7 @@ import com.example.m5.util.showItemSelectDialog
 import com.example.m5.util.transparentStatusBar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import kotlin.math.log
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
     companion object {
@@ -80,7 +82,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             binding.songNamePA.text = musicListPA[songPosition].name
             binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
         } else
-        initializeLayout()
+            initializeLayout()
 
         binding.navPA.setOnClickListener {
             showItemSelectDialog(this@PlayerActivity, position = songPosition)
@@ -154,7 +156,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             val shareIntent = Intent()
             shareIntent.action = Intent.ACTION_SEND
             shareIntent.type = "audio/*"
-            shareIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(musicListPA[songPosition].localInfo?.path))
+            shareIntent.putExtra(
+                Intent.EXTRA_STREAM,
+                Uri.parse(musicListPA[songPosition].localInfo?.path)
+            )
             startActivity(Intent.createChooser(shareIntent, "分享音乐文件给你的朋友"))
         }
 
@@ -162,11 +167,11 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
         binding.favouriteBtnPA.setOnClickListener {
             fIndex = favouriteChecker(musicListPA[songPosition].id!!)
-            if(isFavourite){
+            if (isFavourite) {
                 isFavourite = false
                 binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
                 FavouriteActivity.favouriteSongs.removeAt(fIndex)
-            } else{
+            } else {
                 isFavourite = true
                 binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
                 FavouriteActivity.favouriteSongs.add(musicListPA[songPosition])
@@ -210,6 +215,9 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     //填充界面的图片以及歌曲名称
     private fun setLayout() {
+      /*  Log.d("yqhy", "返回内容${musicListPA}")
+        Log.d("yqhy", "返回内容${songPosition}")*/
+
         fIndex = musicListPA[songPosition].id?.let { favouriteChecker(it) }!!
         Glide.with(this)
             .load(musicListPA[songPosition].imageUrl)
@@ -223,6 +231,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.bordeaux_red))
         if (isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
         else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
+
     }
 
     //创建播放器
@@ -238,7 +247,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             isPlaying = true
             //替换播放按钮
             binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-            musicService!!.showNotification(if (isPlaying) R.drawable.ic_pause else R.drawable.play_icon,1F)
+            musicService!!.showNotification(
+                if (isPlaying) R.drawable.ic_pause else R.drawable.play_icon,
+                1F
+            )
             //这是进度条两端的文字时间进度
             binding.tvSeekBarStart.text =
                 formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
@@ -273,20 +285,48 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 if (isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
                 else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
             }
-            "MusicAdapterSearch"-> initServiceAndPlaylist(MainActivity.musicListSearch, shuffle = false)
-            "MusicAdapter" -> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = false)
-            "FavouriteAdapter"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = false)
-            "MainActivity"-> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = true)
-            "FavouriteShuffle"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = true)
-            "FavouriteSequence"-> initServiceAndPlaylist(FavouriteActivity.favouriteSongs, shuffle = false)
-            "PlaylistDetailsAdapter"->
-                initServiceAndPlaylist(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist, shuffle = false)
-            "PlaylistDetailsShuffle"->
-                initServiceAndPlaylist(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist, shuffle = true)
-            "PlaylistDetailsSequence"->
-                initServiceAndPlaylist(PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist, shuffle = false)
 
-            "SearchActivity"->{
+            "MusicAdapterSearch" -> initServiceAndPlaylist(
+                MainActivity.musicListSearch,
+                shuffle = false
+            )
+
+            "MusicAdapter" -> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = false)
+            "FavouriteAdapter" -> initServiceAndPlaylist(
+                FavouriteActivity.favouriteSongs,
+                shuffle = false
+            )
+
+            "MainActivity" -> initServiceAndPlaylist(MainActivity.MusicListMAX, shuffle = true)
+            "FavouriteShuffle" -> initServiceAndPlaylist(
+                FavouriteActivity.favouriteSongs,
+                shuffle = true
+            )
+
+            "FavouriteSequence" -> initServiceAndPlaylist(
+                FavouriteActivity.favouriteSongs,
+                shuffle = false
+            )
+
+            "PlaylistDetailsAdapter" ->
+                initServiceAndPlaylist(
+                    PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist,
+                    shuffle = false
+                )
+
+            "PlaylistDetailsShuffle" ->
+                initServiceAndPlaylist(
+                    PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist,
+                    shuffle = true
+                )
+
+            "PlaylistDetailsSequence" ->
+                initServiceAndPlaylist(
+                    PlaylistActivity.musicPlaylist.ref[PlaylistDetails.currentPlaylistPos].playlist,
+                    shuffle = false
+                )
+
+            "SearchActivity" -> {
                 initServiceAndPlaylist(musicListNE, shuffle = false)
                 songPosition = intent.getIntExtra("index", 0)
             }
@@ -393,10 +433,10 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-/*    override fun onDestroy() {
-        super.onDestroy()
-        if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
-    }*/
+    /*    override fun onDestroy() {
+            super.onDestroy()
+            if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
+        }*/
 
     private fun initServiceAndPlaylist(
         playlist: ArrayList<StandardSongData>,

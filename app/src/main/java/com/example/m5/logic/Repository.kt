@@ -35,15 +35,15 @@ object Repository {
         } catch (e: Exception) {
             Log.d("hucheng", "Repository error")
             Log.d("hucheng", e.toString())
-            Result.failure<List<Song>>(e)
+            Result.failure(e)
         }
         emit(result)
     }
 
 
-    fun getUri(id: Long, level: String) = liveData(Dispatchers.IO) {
+    fun getUrl(id: String, level: String) = liveData(Dispatchers.IO) {
         val result = try {
-            val musicResponse = MusicNetwork.getUri(id, level)
+            val musicResponse = MusicNetwork.getUrl(id, level)
             if (musicResponse.code == "200") {
                 val song = musicResponse.data[0]
                 Result.success(song)

@@ -17,8 +17,7 @@ object MusicNetwork {
 
 
     suspend fun searchMusic(keywords: String) = searchService.searchMusic(keywords).await()
-    suspend fun getUri(id: Long, level: String) = searchService.getUri(id, level).await()
-    suspend fun getUriX(id: Long, level: String) = searchService.getUriX(id, level).await()
+    suspend fun getUrl(id: String, level: String) = searchService.getUrl(id, level).await()
 
     suspend fun getHighQuality() = mainService.mainHighQuality().await()
 

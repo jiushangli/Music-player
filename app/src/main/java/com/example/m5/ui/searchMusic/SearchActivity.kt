@@ -14,11 +14,8 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.R
 import com.example.m5.activity.PlayerActivity
-import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivitySearchBinding
 import com.example.m5.logic.model.Data
-import com.example.m5.temp.playMusicX
-import com.example.m5.ui.player.PlayMusicViewModel
 
 class SearchActivity : AppCompatActivity() {
 
@@ -86,7 +83,7 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.uriLiveData.observe(this) { result->
+        viewModel.urlLiveData.observe(this) { result->
             val song: Data? = (result as Result<Data>).getOrNull()
             Log.d("hucheng", "返回内容${song.toString()}")
             song?.let { noNullSong->
@@ -97,9 +94,10 @@ class SearchActivity : AppCompatActivity() {
                 }
 
                 val intent = Intent(this, PlayerActivity::class.java).setAction("your.custom.action")
-                intent.putExtra("index", viewModel.postion)
+                intent.putExtra("index", 0)
                 intent.putExtra("class", "SearchActivity")
                 ContextCompat.startActivity(this, intent, null)
+
             }
         }
 

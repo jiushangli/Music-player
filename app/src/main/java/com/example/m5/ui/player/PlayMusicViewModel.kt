@@ -7,7 +7,7 @@ import com.example.m5.logic.model.Data
 class PlayMusicViewModel: ViewModel() {
 
     companion object{
-        var musicList: ArrayList<Data> = ArrayList<Data>()
+        var musicList = ArrayList<Data>()
         var position: Int = -1
     }
 

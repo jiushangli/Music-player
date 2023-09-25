@@ -11,9 +11,6 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.activity.PlayerActivity
-import com.example.m5.activity.PlaylistActivity
-import com.example.m5.activity.PlaylistDetails
-import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.logic.model.Song
 
@@ -49,12 +46,7 @@ class SearchMusicAdapter(
         }
         holder.root.setOnClickListener {
             SearchActivity.instance!!.viewModel.postion = position
-            SearchActivity.instance!!.viewModel.getUri(Pair(musicList[position].id, "standard"))
-
-
-
-
-
+            SearchActivity.instance!!.viewModel.getUrl(Pair(musicList[position].id, "standard"))
 
         }
     }

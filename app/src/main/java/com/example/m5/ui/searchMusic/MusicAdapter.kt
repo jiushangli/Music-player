@@ -34,7 +34,7 @@ class MusicAdapter(val musicList: List<Song>): RecyclerView.Adapter<MusicAdapter
             val music = musicList[position]
             val activity = SearchActivity.instance
             val id = music.id
-            activity!!.viewModel.getUri(Pair(id, "sky"))
+            activity!!.viewModel.getUrl(Pair(id, "sky"))
         }
 
 

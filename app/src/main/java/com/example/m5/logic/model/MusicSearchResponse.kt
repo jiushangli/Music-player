@@ -14,12 +14,12 @@ data class Song(val al: Al?,
                 val ar: List<Ar>,
                 val copyright: Long,
                 val fee: Int,
-                val id: Long,
+                val id: String,
                 val name: String,
                 val privilege: Privilege?,)
 {
     fun switchToStandard(url:String): StandardSongData {
-        return StandardSongData(SOURCE_NETEASE, id.toString(), name,
+        return StandardSongData(SOURCE_NETEASE, id, name,
             al?.getImageUrl(), getArtList(), url = url,getNeteaseInfo(), null, null)
     }
     private fun getNeteaseInfo(): StandardSongData.NeteaseInfo {
