@@ -18,9 +18,9 @@ data class Song(val al: Al?,
                 val name: String,
                 val privilege: Privilege?,)
 {
-    fun switchToStandard(url:String): StandardSongData {
+    fun switchToStandard(): StandardSongData {
         return StandardSongData(SOURCE_NETEASE, id, name,
-            al?.getImageUrl(), getArtList(), url = url,getNeteaseInfo(), null, null)
+            al?.getImageUrl(), getArtList(),getNeteaseInfo(), null, null)
     }
     private fun getNeteaseInfo(): StandardSongData.NeteaseInfo {
         return StandardSongData.NeteaseInfo(fee, privilege?.pl, 0, privilege?.maxbr)

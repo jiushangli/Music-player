@@ -90,7 +90,7 @@ class SearchActivity : AppCompatActivity() {
 
                 //把音乐转成标准格式,传入参数url实现
                 viewModel.musicList[viewModel.postion].let {
-                    PlayerActivity.musicListNE.add(it.switchToStandard(noNullSong.url))
+                    PlayerActivity.musicListNE.add(it.switchToStandard())
                 }
 
                 val intent = Intent(this, PlayerActivity::class.java).setAction("your.custom.action")

@@ -14,6 +14,7 @@ const val SOURCE_DIRROR = 4
 const val SOURCE_KUWO = 5
 const val SOURCE_NETEASE_CLOUD = 6
 const val SOURCE_BILIBILI = 6
+
 /**
  * 标准歌曲信息
  */
@@ -25,9 +26,6 @@ data class StandardSongData(
     var name: String?, // 歌曲名称
     var imageUrl: String?, // 图片 url
     var artists: ArrayList<StandardArtistData>?, // 艺术家
-
-    var url: String? = null,
-
     @Embedded
     var neteaseInfo: NeteaseInfo?,
 
@@ -39,8 +37,10 @@ data class StandardSongData(
 ) : Parcelable {
 
     @Ignore
-    constructor() : this(SOURCE_NETEASE,
-    null, null, null, null, null, null, null, null)
+    constructor() : this(
+        SOURCE_NETEASE,
+        null, null, null, null, null, null, null
+    )
 
     /**
      * 标准艺术家数据

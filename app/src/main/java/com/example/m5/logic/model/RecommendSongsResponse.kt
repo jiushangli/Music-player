@@ -9,10 +9,10 @@ data class RecommendData(val dailySongs: List<DailySong>)
 
 data class DailySong(val name:String, val id: String, val ar: List<ArRecommend>, val al: AlRecommend, val reason: String)
 {
-    fun switchToStandard(url:String): StandardSongData {
+    fun switchToStandard(): StandardSongData {
         return StandardSongData(
             SOURCE_NETEASE, id, name,
-            al.getImageUrl(), getArtList(), url = url,null, null, null)
+            al.getImageUrl(), getArtList(),null, null, null)
     }
    /* private fun getNeteaseInfo(): StandardSongData.NeteaseInfo {
         return StandardSongData.NeteaseInfo(null, privilege?.pl, 0, privilege?.maxbr)

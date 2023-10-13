@@ -84,7 +84,7 @@ class RecommendAdapter(val context: Context, val dailySongs: List<DailySong>) :
     private fun dailySongToSong(): ArrayList<StandardSongData> {
         val list = ArrayList<StandardSongData>()
         for (song in dailySongs) {
-            list.add(song.switchToStandard("null"))
+            list.add(song.switchToStandard())
         }
         return list
     }

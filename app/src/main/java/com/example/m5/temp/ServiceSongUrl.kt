@@ -26,7 +26,7 @@ object ServiceSongUrl {
     inline fun getUrlProxy(song: StandardSongData, crossinline success: (Any?) -> Unit) {
         getUrl(song) {
             GlobalScope.launch {
-                withContext(Dispatchers.IO) {
+                withContext(Dispatchers.Main) {
                     success.invoke(it)
                 }
             }

@@ -218,7 +218,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
                 imageUrl = "artUriC",
                 artistList,
                 null,
-                null,
                 StandardSongData.LocalInfo(duration = duration!!, path = path),
                 null
             )
@@ -255,11 +254,17 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             musicService!!.mediaPlayer!!.reset()
 
             var songUrl: String
-            withContext(Dispatchers.IO) {
-                // 在 IO 线程中执行异步任务，比如网络请求
-                songUrl = MusicNetwork.getUrl(song.id.toString(), "Standard").data[0].url
-            }
 
+            if (song.source == SOURCE_LOCAL) {
+                songUrl = song.localInfo?.path!!
+            } else {
+                run {
+                    withContext(Dispatchers.IO) {
+                        // 在 IO 线程中执行异步任务，比如网络请求
+                        songUrl = MusicNetwork.getUrl(song.id.toString(), "Standard").data[0].url
+                    }
+                }
+            }
             // 回到主线程
 
             Log.d("yqhy", "返回内容${songUrl}")

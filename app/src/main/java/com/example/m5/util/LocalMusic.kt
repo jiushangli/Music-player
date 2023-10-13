@@ -69,7 +69,6 @@ object LocalMusic {
                         imageUrl = artUriC,
                         artistList,
                         null,
-                        null,
                         StandardSongData.LocalInfo(duration = duration, path = path),
                         null
                     )
