@@ -6,6 +6,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.AudioManager
 import android.media.MediaPlayer
+import android.net.Uri
 import android.os.Binder
 import android.os.Build
 import android.os.Handler
@@ -14,14 +15,22 @@ import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
+import android.util.Log
 import com.example.m5.MusicApplication
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
+import com.example.m5.data.SOURCE_NETEASE
+import com.example.m5.data.StandardSongData
 import com.example.m5.frag.NowPlaying
+import com.example.m5.temp.ServiceSongUrl
+import com.example.m5.temp.ServiceSongUrl.getUrlProxy
 import com.example.m5.util.NotificationReceiver
 import com.example.m5.util.formatDuration
 import com.example.m5.util.getImgArt
+import com.example.m5.util.runOnMainThread
+import com.google.android.material.color.utilities.MaterialDynamicColors.onError
+import com.google.gson.Gson
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     private var myBinder = MyBinder()
@@ -130,12 +139,55 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         startForeground(13, notification)
     }
 
-    fun createMediaPlayer() {
+    fun createMediaPlayer(song: StandardSongData) {
         try {
             if (mediaPlayer == null) mediaPlayer = MediaPlayer()
             mediaPlayer!!.reset()
-            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].url)
+//            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].url)
+//            mediaPlayer!!.setDataSource("http://m702.music.126.net/20231012204723/438f131c9f0d4f7b4a1afaf433fde371/jd-musicrep-ts/4b29/49a4/74b2/16ac0b6b3f53134ff6ad16f4f41d21eb.mp3")
+
+
+            mediaPlayer.apply {
+                getUrlProxy(song) {
+                    runOnMainThread {
+                        if (it == null || it is String && it.isEmpty()) {
+                            /*if (playNext) {
+                                toast("当前歌曲不可用, 播放下一首")
+                                playNext()
+                            }*/
+                            return@runOnMainThread
+                        }
+                        when (it) {
+                            is String -> {
+                                try {
+                                    this?.setDataSource(it)
+                                } catch (e: Exception) {
+                                    return@runOnMainThread
+                                }
+                            }
+                            is Uri -> {
+                                try {
+                                    this?.setDataSource(applicationContext, it)
+                                } catch (e: Exception) {
+                                    return@runOnMainThread
+                                }
+                            }
+                            else -> {
+                                return@runOnMainThread
+                            }
+                        }
+               /*         this?.setOnPreparedListener(this@MusicController) // 歌曲准备完成的监听
+                        this?.setOnCompletionListener(this@MusicController) // 歌曲完成后的回调
+                        this?.setOnErrorListener(this@MusicController)
+                        this?.prepareAsync()*/
+                    }
+                }
+            }
+
             mediaPlayer!!.prepare()
+            mediaPlayer!!.start()
+
+            //把播放界面装载
             PlayerActivity.binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
             showNotification(R.drawable.ic_pause, 1F)
             PlayerActivity.binding.tvSeekBarStart.text =
@@ -185,4 +237,17 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
+
+
+}
+
+suspend fun main() {
+    val song = StandardSongData()
+    song.id = "405998841"
+    ServiceSongUrl.getUrl(song) {
+        println(it.toString())
+    }
+    kotlinx.coroutines.delay(1000)
+    println("Kissing the fire")
+
 }

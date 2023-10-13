@@ -26,9 +26,7 @@ data class StandardSongData(
     var imageUrl: String?, // 图片 url
     var artists: ArrayList<StandardArtistData>?, // 艺术家
 
-
     var url: String? = null,
-
 
     @Embedded
     var neteaseInfo: NeteaseInfo?,

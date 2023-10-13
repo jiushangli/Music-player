@@ -5,7 +5,6 @@ import androidx.lifecycle.liveData
 import com.example.m5.logic.dao.AppConfigDao
 import com.example.m5.logic.model.CodeData
 import com.example.m5.logic.model.KeyData
-import com.example.m5.logic.model.LoginCodeStatusResponse
 import com.example.m5.logic.model.LoginStatusResponse
 import com.example.m5.logic.model.MainNcResponse
 import com.example.m5.logic.model.RecommendSongsResponse
@@ -45,8 +44,7 @@ object Repository {
         val result = try {
             val musicResponse = MusicNetwork.getUrl(id, level)
             if (musicResponse.code == "200") {
-                val song = musicResponse.data[0]
-                Result.success(song)
+                Result.success(musicResponse)
             } else {
                 Result.failure(
                     RuntimeException(

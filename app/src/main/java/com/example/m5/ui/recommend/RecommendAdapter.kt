@@ -2,26 +2,24 @@ package com.example.m5.ui.recommend
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Intent
 import android.graphics.Typeface
-import android.net.wifi.p2p.WifiP2pManager.GroupInfoListener
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
-import com.example.m5.databinding.ActivityRecommendBinding
+import com.example.m5.activity.PlayerActivity
+import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.MusicViewBinding
 import com.example.m5.logic.model.DailySong
-import com.example.m5.ui.player.PlayMusicViewModel
-import com.example.m5.ui.player.PlayMusicViewModel.Companion.musicList
-import com.example.m5.ui.player.PlayMusicViewModel.Companion.position
-import com.example.m5.ui.searchMusic.SearchActivity
 
-class RecommendAdapter(val context: Context, private val dailySongs: List<DailySong>) :
+class RecommendAdapter(val context: Context, val dailySongs: List<DailySong>) :
     RecyclerView.Adapter<RecommendAdapter.Holder>() {
 
     class Holder(binding: MusicViewBinding) : RecyclerView.ViewHolder(binding.root) {
@@ -65,13 +63,29 @@ class RecommendAdapter(val context: Context, private val dailySongs: List<DailyS
 
 
         holder.root.setOnClickListener {
-            Toast.makeText(context, "say something", Toast.LENGTH_SHORT).show()
-            RecommendActivity.instance!!.viewMode.position = position
-            Log.d("yqhy",RecommendActivity.instance?.viewMode?.position.toString())
-            RecommendActivity.instance!!.viewMode.getUrl(Pair(dailySongs[position].id, "standard"))
+//            RecommendActivity.instance!!.viewMode.position = position
+//            RecommendActivity.instance!!.viewMode.getUrl(Pair(dailySongs[position].id, "standard"))
 
+            PlayerActivity.musicListNE = dailySongToSong()
+            PlayerActivity.songPosition = position
+            dailySongToSong()
+
+            val intent = Intent(context, PlayerActivity::class.java).setAction("your.custom.action")
+            intent.putExtra("index", position)
+            intent.putExtra("class", "SearchActivity")
+            ContextCompat.startActivity(context, intent, null)
         }
     }
 
     override fun getItemCount() = dailySongs.size
+
+
+    //url不应该保存在歌曲里
+    private fun dailySongToSong(): ArrayList<StandardSongData> {
+        val list = ArrayList<StandardSongData>()
+        for (song in dailySongs) {
+            list.add(song.switchToStandard("null"))
+        }
+        return list
+    }
 }

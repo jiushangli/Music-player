@@ -12,7 +12,7 @@ interface SearchService {
     @GET("/cloudsearch?limit=16")
     fun searchMusic(@Query("keywords") keywords: String): Call<MusicSearchResponse>
 
-    @GET("/song/url/v1")
-    fun getUrl(@Query("id")id: String, @Query("level")level: String): Call<SongResponse>
+    @GET("/song/url/v2")
+    suspend fun getUrl(@Query("id")id: String, @Query("level")level: String): SongResponse
 
 }

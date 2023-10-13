@@ -43,7 +43,7 @@ class NotificationReceiver : BroadcastReceiver() {
 
     private fun preNextSong(increment: Boolean, context: Context) {
         setSongPosition(increment = increment)
-        PlayerActivity.musicService!!.createMediaPlayer()
+        PlayerActivity.musicService!!.createMediaPlayer(PlayerActivity.musicListPA[PlayerActivity.songPosition])
 
         //装载播放界面的专辑以及歌曲名
         Glide.with(context)

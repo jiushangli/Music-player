@@ -1,7 +1,9 @@
 package com.example.m5.activity
 
 import android.content.Intent
+import android.media.MediaPlayer
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.m5.R
 import com.example.m5.databinding.ActivitySettingBinding
@@ -50,6 +52,21 @@ class SettingActivity : AppCompatActivity() {
                     FeedbackActivity::class.java
                 ).setAction("your.custom.action")
             )
+        }
+        binding.kiss.setOnClickListener {
+
+            Toast.makeText(this, "here", Toast.LENGTH_SHORT).show()
+            var mediaPlayer: MediaPlayer? = MediaPlayer()
+
+            /*    ServiceSongUrl.getUrlProxy(song) {
+                    println(it)
+                }*/
+            mediaPlayer!!.reset()
+//            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].url)
+            mediaPlayer.setDataSource("https://m802.music.126.net/20231012211412/c75662e6b34d05069ce421155bddc61b/jd-musicrep-ts/4b29/49a4/74b2/16ac0b6b3f53134ff6ad16f4f41d21eb.mp3")
+
+            mediaPlayer.prepare()
+            mediaPlayer.start()
         }
 
 //        binding.imgVague.refreshBG(binding.root);

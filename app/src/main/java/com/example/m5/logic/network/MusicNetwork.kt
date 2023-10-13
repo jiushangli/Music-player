@@ -10,14 +10,14 @@ import kotlin.coroutines.suspendCoroutine
 
 object MusicNetwork {
 
-     val searchService = ServiceCreator.create<SearchService>()
+    private val searchService = ServiceCreator.create<SearchService>()
     private val mainService = ServiceCreator.create<MainService>()
     private val loginService = ServiceCreator.create<LoginService>()
     private val RecommendService = ServiceCreator.create<RecommendService>()
 
 
     suspend fun searchMusic(keywords: String) = searchService.searchMusic(keywords).await()
-    suspend fun getUrl(id: String, level: String) = searchService.getUrl(id, level).await()
+    suspend fun getUrl(id: String, level: String) = searchService.getUrl(id, level)
 
     suspend fun getHighQuality() = mainService.mainHighQuality().await()
 
@@ -25,26 +25,27 @@ object MusicNetwork {
 
     suspend fun getNewMusicAls() = mainService.mainNewSongAl().await()
 
-    suspend fun getKey(timestamp:String) = loginService.getKey(timestamp).await()
+    suspend fun getKey(timestamp: String) = loginService.getKey(timestamp).await()
 
-    suspend fun getCode(key: String, timestamp: String) = loginService.getCode(key, timestamp).await()
+    suspend fun getCode(key: String, timestamp: String) =
+        loginService.getCode(key, timestamp).await()
 
-    suspend fun getCodeStatue(key: String, timestamp: String) = loginService.getLoginCodeStatus(key, timestamp).await()
+    suspend fun getCodeStatue(key: String, timestamp: String) =
+        loginService.getLoginCodeStatus(key, timestamp).await()
 
-    suspend fun getStatus(timestamp: String, cookie: String) = loginService.getLoginStatus(timestamp, cookie).await()
+    suspend fun getStatus(timestamp: String, cookie: String) =
+        loginService.getLoginStatus(timestamp, cookie).await()
 
     suspend fun getRecommend(cookie: String) = RecommendService.getRecommend(cookie).await()
-    private suspend fun <T> Call<T>.await(): T{
+    private suspend fun <T> Call<T>.await(): T {
         return suspendCoroutine { continuation ->
-            enqueue(object: Callback<T>{
+            enqueue(object : Callback<T> {
 
                 override fun onResponse(call: Call<T>, response: Response<T>) {
                     val body = response.body()
-                    if(body != null){
-                        Log.d("hucheng", "network: $body")
+                    if (body != null) {
                         continuation.resume(body)
-                    }else{
-                        Log.d("hucheng", "network: $body")
+                    } else {
                         continuation.resumeWithException(
                             RuntimeException("response body is null")
                         )

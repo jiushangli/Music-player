@@ -12,8 +12,15 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
+import com.example.m5.activity.PlayerActivity.Companion.musicListPA
 import com.example.m5.databinding.FragmentNowPlayingBinding
 import com.example.m5.util.setSongPosition
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class NowPlaying : Fragment() {
     companion object {
@@ -39,16 +46,16 @@ class NowPlaying : Fragment() {
         binding.nextBtnNP.setOnClickListener {
             if (PlayerActivity.musicService != null) {
                 setSongPosition(increment = true)
-                PlayerActivity.musicService!!.createMediaPlayer()
+                PlayerActivity.musicService!!.createMediaPlayer(musicListPA[PlayerActivity.songPosition])
 
                 Glide.with(this)
-                    .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].imageUrl)
+                    .load(musicListPA[PlayerActivity.songPosition].imageUrl)
                     .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                     .into(binding.songImgNP)
                 binding.songNameNP.text =
-                    PlayerActivity.musicListPA[PlayerActivity.songPosition].name
+                    musicListPA[PlayerActivity.songPosition].name
                 binding.artistNP.text =
-                    PlayerActivity.musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
+                    musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
                 PlayerActivity.musicService!!.showNotification(R.drawable.pause_icon,1F)
                 playMusic()
             }
@@ -57,16 +64,16 @@ class NowPlaying : Fragment() {
         binding.preBtnNP.setOnClickListener {
             if (PlayerActivity.musicService != null) {
                 setSongPosition(increment = false)
-                PlayerActivity.musicService!!.createMediaPlayer()
+                PlayerActivity.musicService!!.createMediaPlayer(musicListPA[PlayerActivity.songPosition])
 
                 Glide.with(this)
-                    .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].imageUrl)
+                    .load(musicListPA[PlayerActivity.songPosition].imageUrl)
                     .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                     .into(binding.songImgNP)
                 binding.songNameNP.text =
-                    PlayerActivity.musicListPA[PlayerActivity.songPosition].name
+                    musicListPA[PlayerActivity.songPosition].name
                 binding.artistNP.text =
-                    PlayerActivity.musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
+                    musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
                 PlayerActivity.musicService!!.showNotification(R.drawable.pause_icon,1F)
                 playMusic()
             }
@@ -95,11 +102,11 @@ class NowPlaying : Fragment() {
         if (PlayerActivity.musicService != null) {
             binding.songNameNP.isSelected = true
             Glide.with(this)
-                .load(PlayerActivity.musicListPA[PlayerActivity.songPosition].imageUrl)
+                .load(musicListPA[PlayerActivity.songPosition].imageUrl)
                 .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                 .into(binding.songImgNP)
-            binding.songNameNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].name
-            binding.artistNP.text = PlayerActivity.musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
+            binding.songNameNP.text = musicListPA[PlayerActivity.songPosition].name
+            binding.artistNP.text = musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
             if (PlayerActivity.isPlaying) binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
             else binding.playPauseBtnNP.setImageResource(R.drawable.play_frag)
         }
@@ -120,4 +127,15 @@ class NowPlaying : Fragment() {
 //        PlayerActivity.binding.nextBtnPA.setIconResource(R.drawable.play_icon)
         PlayerActivity.isPlaying = false
     }
+}
+
+fun main() = runBlocking {
+    println("Start")
+
+    launch {
+        delay(1000L)  // 模拟一个耗时操作
+        println("Hello from coroutine!")
+    }
+
+    println("End")
 }

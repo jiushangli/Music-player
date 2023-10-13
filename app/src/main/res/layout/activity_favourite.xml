@@ -56,18 +56,6 @@
             android:src="@drawable/play_frag"
             app:tint="@color/mask_pink" />
 
-
-        <!--<com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:id="@+id/addBtnFA"
-            style="?attr/floatingActionButtonSmallSurfaceStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:layout_gravity="center"
-            android:layout_weight="1"
-            android:backgroundTint="@color/mask_pink"
-            app:elevation="0dp"
-            app:srcCompat="@drawable/plus_icon" />-->
-
         <ImageButton
             android:id="@+id/shuffleBtnFA"
             style="@style/Widget.AppCompat.Button.Borderless"

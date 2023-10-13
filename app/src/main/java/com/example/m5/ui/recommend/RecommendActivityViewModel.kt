@@ -35,12 +35,5 @@ class RecommendActivityViewModel: ViewModel() {
         getUrlLiveData.value = pair
     }
 
-    //url不应该保存在歌曲里
-    fun dailySongToSong(): ArrayList<StandardSongData> {
-        val list = ArrayList<StandardSongData>()
-        for (song in dailySongs) {
-            list.add(song.switchToStandard("null"))
-        }
-        return list
-    }
+
 }

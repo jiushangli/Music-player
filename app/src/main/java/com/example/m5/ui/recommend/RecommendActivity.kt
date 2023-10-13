@@ -42,7 +42,6 @@ class RecommendActivity : AppCompatActivity() {
         binding.recommendRecyclerView.adapter = adapterRecommend
 
 
-
         //数据绑定
         viewMode.recommendFocus.observe(this) { result->
             val recommend = result.getOrNull()
@@ -55,10 +54,9 @@ class RecommendActivity : AppCompatActivity() {
         }
 
         viewMode.urlLiveData.observe(this) { result->
-            Log.d("hucheng", "$result")
             val song: Data? = (result as Result<Data>).getOrNull()
-            Log.d("hucheng", "返回内容${song.toString()}")
-            song?.let { noNullSong->
+
+/*            song?.let {
 
                 //把音乐转成标准格式,传入参数url实现
                 viewMode.dailySongs[viewMode.position].let {
@@ -70,7 +68,7 @@ class RecommendActivity : AppCompatActivity() {
                 intent.putExtra("index", 0)
                 intent.putExtra("class", "SearchActivity")
                 ContextCompat.startActivity(this, intent, null)
-            }
+            }*/
         }
 
         //获取每日推荐

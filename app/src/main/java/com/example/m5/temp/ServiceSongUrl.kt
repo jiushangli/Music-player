@@ -2,32 +2,39 @@ package com.example.m5.temp
 
 import android.content.ContentUris
 import android.net.Uri
+import android.util.Log
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.SOURCE_NETEASE
 import com.example.m5.data.StandardSongData
 import com.example.m5.logic.network.MusicNetwork
 import com.example.m5.plugin.PluginConstants
 import com.example.m5.plugin.PluginSupport
+import com.example.m5.temp.ServiceSongUrl.getUrlProxy
+import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import kotlin.math.log
 
 /**
  * 获取歌曲 URL
  */
 object ServiceSongUrl {
 
+    @OptIn(DelicateCoroutinesApi::class)
     inline fun getUrlProxy(song: StandardSongData, crossinline success: (Any?) -> Unit) {
         getUrl(song) {
             GlobalScope.launch {
-                withContext(Dispatchers.Main) {
+                withContext(Dispatchers.IO) {
                     success.invoke(it)
                 }
             }
         }
+
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     inline fun getUrl(song: StandardSongData, crossinline success: (Any?) -> Unit) {
         PluginSupport.setSong(song)
         val pluginUrl = PluginSupport.apply(PluginConstants.POINT_SONG_URL)
@@ -37,7 +44,7 @@ object ServiceSongUrl {
         }
         when (song.source) {
             SOURCE_NETEASE -> {
-                GlobalScope.launch {
+                GlobalScope.launch(Dispatchers.IO) {
                     if (song.neteaseInfo?.pl == 0) {
                         success.invoke(null)
                     } else {
@@ -56,6 +63,7 @@ object ServiceSongUrl {
                     )
                 success.invoke(contentUri)
             }
+
             else -> success.invoke(null)
         }
     }
@@ -70,5 +78,24 @@ object ServiceSongUrl {
         }
         return sb.toString()
     }
+
+}
+
+suspend fun main() {
+
+    val song = StandardSongData()
+    song.id = "405998841"
+/*  println(MusicNetwork.getUrl("405998841", "Standard").data[0].url)
+
+   println("kiss")
+   ServiceSongUrl.getUrl(song) {
+       println(it.toString())
+   }*/
+
+
+    getUrlProxy(song) {
+       println(it.toString())
+   }
+   kotlinx.coroutines.delay(1000)
 
 }

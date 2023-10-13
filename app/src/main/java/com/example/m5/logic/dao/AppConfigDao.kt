@@ -11,9 +11,6 @@ object AppConfigDao {
         val edit = sharePreferences().edit()
         edit.putString("cookie", cookie)
         edit.apply()
-
-
-
     }
 
     fun getSavedCookie(): String?{

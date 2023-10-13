@@ -19,22 +19,30 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
-import com.example.m5.service.MusicService
 import com.example.m5.R
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityPlayerBinding
+import com.example.m5.logic.network.MusicNetwork
+import com.example.m5.service.MusicService
+import com.example.m5.service.playMusic
+import com.example.m5.temp.ServiceSongUrl
 import com.example.m5.util.exitApplication
 import com.example.m5.util.favouriteChecker
 import com.example.m5.util.formatDuration
 import com.example.m5.util.getImgArt
+import com.example.m5.util.runOnMainThread
 import com.example.m5.util.setSongPosition
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.showItemSelectDialog
 import com.example.m5.util.transparentStatusBar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlin.math.log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.withContext
 
 class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
     companion object {
@@ -66,6 +74,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         setContentView(binding.root)
         transparentStatusBar(window)
         setStatusBarTextColor(window, false)
+
         if (intent.data?.scheme.contentEquals("content")) {
             val intentService = Intent(this, MusicService::class.java)
             //绑定服务,其中BIND_AUTO_CREATE表示在Activity和Service建立关联后自动创建Service
@@ -98,10 +107,14 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
         //上下一首
         binding.previousBtnPA.setOnClickListener {
-            preNextSong(false)
+            GlobalScope.launch(Dispatchers.Main) {
+                preNextSong(false)
+            }
         }
         binding.nextBtnPA.setOnClickListener {
-            preNextSong(true)
+            GlobalScope.launch(Dispatchers.Main) {
+                preNextSong(true)
+            }
         }
         //进度条
         binding.seekBarPA.setOnSeekBarChangeListener(object : SeekBar.OnSeekBarChangeListener {
@@ -215,8 +228,8 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     //填充界面的图片以及歌曲名称
     private fun setLayout() {
-      /*  Log.d("yqhy", "返回内容${musicListPA}")
-        Log.d("yqhy", "返回内容${songPosition}")*/
+        /*  Log.d("yqhy", "返回内容${musicListPA}")
+          Log.d("yqhy", "返回内容${songPosition}")*/
 
         fIndex = musicListPA[songPosition].id?.let { favouriteChecker(it) }!!
         Glide.with(this)
@@ -234,16 +247,28 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
 
     }
 
-    //创建播放器
-    private fun createMediaPlayer() {
+    private suspend fun createMediaPlayer(song: StandardSongData) {
         try {
-            //如果为空就创建一个,在什么时候为空呢,在第一次进入的时候为空
+            // 如果为空就创建一个,在什么时候为空呢,在第一次进入的时候为空
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
-            //这里在设置播放器
+
             musicService!!.mediaPlayer!!.reset()
-            musicService!!.mediaPlayer!!.setDataSource(musicListPA[songPosition].url)
+
+            var songUrl: String
+            withContext(Dispatchers.IO) {
+                // 在 IO 线程中执行异步任务，比如网络请求
+                songUrl = MusicNetwork.getUrl(song.id.toString(), "Standard").data[0].url
+            }
+
+            // 回到主线程
+
+            Log.d("yqhy", "返回内容${songUrl}")
+            Log.d("yqhy", "音乐的id : ${song.id}")
+
+            musicService!!.mediaPlayer!!.setDataSource(songUrl)
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
+            // ... 其他 UI 更新操作 ...
             isPlaying = true
             //替换播放按钮
             binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
@@ -259,14 +284,103 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             //这是进度条的小圆点
             binding.seekBarPA.progress = 0
             binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+//                    musicService!!.mediaPlayer!!.setOnCompletionListener(this)
             nowPlayingId = musicListPA[songPosition].id!!
+
 
         } catch (e: Exception) {
             e.printStackTrace()
-            return
         }
     }
+
+
+    //创建播放器
+    /*private fun createMediaPlayer(song: StandardSongData) = runBlocking {
+        try {
+            //如果为空就创建一个,在什么时候为空呢,在第一次进入的时候为空
+            if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer = MediaPlayer()
+            //这里在设置播放器
+            musicService!!.mediaPlayer!!.reset()
+//            musicService!!.mediaPlayer!!.setDataSource("https://m802.music.126.net/20231012211412/c75662e6b34d05069ce421155bddc61b/jd-musicrep-ts/4b29/49a4/74b2/16ac0b6b3f53134ff6ad16f4f41d21eb.mp3")
+            var kiss: String
+            launch(Dispatchers.IO) {
+                // 在 IO 线程中执行异步任务，比如网络请求
+                *//*ServiceSongUrl.getUrlProxy(song) {
+                    kiss = it.toString()
+                }*//*
+                kiss = MusicNetwork.getUrl(song.id.toString(), "Standard").data[0].url
+
+                // 切换回主线程更新 UI
+                launch(Dispatchers.Main) {
+                    Log.d("yqhy", "返回内容${kiss}")
+                    musicService!!.mediaPlayer!!.setDataSource(kiss)
+                    musicService!!.mediaPlayer!!.prepare()
+                    musicService!!.mediaPlayer!!.start()
+                    isPlaying = true
+                    //替换播放按钮
+                    binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
+                    musicService!!.showNotification(
+                        if (isPlaying) R.drawable.ic_pause else R.drawable.play_icon,
+                        1F
+                    )
+                    //这是进度条两端的文字时间进度
+                    binding.tvSeekBarStart.text =
+                        formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+                    binding.tvSeekBarEnd.text =
+                        formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+                    //这是进度条的小圆点
+                    binding.seekBarPA.progress = 0
+                    binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
+//                    musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+                    nowPlayingId = musicListPA[songPosition].id!!
+                }
+            }
+
+
+            *//*musicService!!.mediaPlayer.apply {
+                ServiceSongUrl.getUrlProxy(song) {
+                    runOnMainThread {
+                        if (it == null || it is String && it.isEmpty()) {
+                            *//**//*if (playNext) {
+                                toast("当前歌曲不可用, 播放下一首")
+                                playNext()
+                            }*//**//*
+                            return@runOnMainThread
+                        }
+                        when (it) {
+                            is String -> {
+                                try {
+                                    this?.setDataSource(it)
+                                } catch (e: Exception) {
+                                    return@runOnMainThread
+                                }
+                            }
+
+                            is Uri -> {
+                                try {
+                                    this?.setDataSource(applicationContext, it)
+                                } catch (e: Exception) {
+                                    return@runOnMainThread
+                                }
+                            }
+
+                            else -> {
+                                return@runOnMainThread
+                            }
+                        }
+                        *//**//*         this?.setOnPreparedListener(this@MusicController) // 歌曲准备完成的监听
+                                 this?.setOnCompletionListener(this@MusicController) // 歌曲完成后的回调
+                                 this?.setOnErrorListener(this@MusicController)
+                                 this?.prepareAsync()*//**//*
+                    }
+                }
+            }*//*
+
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }*/
 
     private fun initializeLayout() {
         //获取传递过来的数据,其中index为歌曲在列表中的位置,默认为0
@@ -347,47 +461,54 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         musicService!!.mediaPlayer!!.pause()
     }
 
-    private fun preNextSong(increment: Boolean) {
+    private suspend fun preNextSong(increment: Boolean) {
         if (increment) {
             setSongPosition(increment = true)
             setLayout()
-            createMediaPlayer()
+            createMediaPlayer(musicListPA[songPosition])
         } else {
             setSongPosition(increment = false)
             setLayout()
-            createMediaPlayer()
+            createMediaPlayer(musicListPA[songPosition])
         }
     }
 
     //为什么要用service的方式,这是为了让音乐播放器在后台运行,而不是在前台运行
     override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-        if (musicService == null) {
-            val binder = service as MusicService.MyBinder
-            musicService = binder.currentService()
-            musicService!!.audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-            musicService!!.audioManager.requestAudioFocus(
-                musicService,
-                AudioManager.STREAM_MUSIC,
-                AudioManager.AUDIOFOCUS_GAIN
-            )
+
+        GlobalScope.launch(Dispatchers.Main) {
+            if (musicService == null) {
+                val binder = service as MusicService.MyBinder
+                musicService = binder.currentService()
+                musicService!!.audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
+                musicService!!.audioManager.requestAudioFocus(
+                    musicService,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN
+                )
+            }
+            createMediaPlayer(musicListPA[songPosition])
+            musicService!!.seekBarSetup()
         }
-        createMediaPlayer()
-        musicService!!.seekBarSetup()
     }
 
     override fun onServiceDisconnected(p0: ComponentName?) {
         musicService = null
+
     }
 
     override fun onCompletion(p0: MediaPlayer?) {
-        setSongPosition(increment = true)
-        createMediaPlayer()
-        try {
-            setLayout()
-        } catch (e: Exception) {
-            e.printStackTrace()
+        GlobalScope.launch(Dispatchers.Main) {
+            setSongPosition(increment = true)
+            createMediaPlayer(musicListPA[songPosition])
+            try {
+                setLayout()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
         }
     }
+
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
