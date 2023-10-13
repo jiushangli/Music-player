@@ -4,9 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.m5.R
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.databinding.ActivitySelectionBinding
-import com.example.m5.ui.searchMusic.MusicAdapter
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 
@@ -28,9 +28,14 @@ class SelectionActivity : AppCompatActivity() {
         binding.selectionRV.setItemViewCacheSize(10)
         binding.selectionRV.setHasFixedSize(true)
         binding.selectionRV.layoutManager = LinearLayoutManager(this)
-        adapter = MusicAdapterX(this, MainActivity.MusicListMAX, selectionActivity = true,from = from)
+        adapter = MusicAdapterX(
+            this,
+            MainActivity.MusicListMAX,
+            selectionActivity = true
+        )
         binding.selectionRV.adapter = adapter
 
+        R.drawable.moni1
         //搜索框监听
         binding.searchViewSA.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String?): Boolean = true

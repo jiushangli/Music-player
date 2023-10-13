@@ -10,9 +10,14 @@ import android.view.Window
 import android.view.WindowManager
 import com.example.m5.activity.FavouriteActivity
 import com.example.m5.activity.PlayerActivity
+import com.example.m5.activity.PlayerActivity.Companion.isFavourite
 import com.example.m5.data.StandardSongData
+import com.example.m5.data.musicListPA
+import com.example.m5.data.repeatPlay
+import com.example.m5.data.songPosition
 import com.example.m5.logic.model.Al
 import com.example.m5.logic.model.Ar
+import com.example.m5.util.PlayMusic.Companion.musicService
 import java.io.File
 import kotlin.system.exitProcess
 
@@ -51,36 +56,36 @@ fun getImgArt(path: String): ByteArray? {
 
 fun setSongPosition(increment: Boolean) {
     //如果不是单曲循环,那么就正常的播放下一首或者上一首
-    if (!PlayerActivity.repeat) {
+    if (! repeatPlay) {
         if (increment) {
-            if (PlayerActivity.songPosition == PlayerActivity.musicListPA.size - 1) {
-                PlayerActivity.songPosition = 0
-            } else PlayerActivity.songPosition++
+            if (  songPosition ==   musicListPA.size - 1) {
+                  songPosition = 0
+            } else   songPosition++
 
         } else {
-            if (PlayerActivity.songPosition == 0) {
-                PlayerActivity.songPosition = PlayerActivity.musicListPA.size - 1
-            } else PlayerActivity.songPosition--
+            if (  songPosition == 0) {
+                  songPosition =   musicListPA.size - 1
+            } else   songPosition--
         }
     }
     //如果是单曲循环,那么就不改变songPosition的值
 }
 
 fun exitApplication() {
-    if (PlayerActivity.musicService != null) {
-        PlayerActivity.musicService!!.audioManager.abandonAudioFocus(PlayerActivity.musicService)
-        PlayerActivity.musicService!!.stopForeground(true)
-        PlayerActivity.musicService!!.mediaPlayer!!.release()
-        PlayerActivity.musicService = null
+    if (  musicService != null) {
+          musicService!!.audioManager.abandonAudioFocus(  musicService)
+          musicService!!.stopForeground(true)
+          musicService!!.mediaPlayer!!.release()
+          musicService = null
     }
     exitProcess(1)
 }
 
 fun favouriteChecker(id: String): Int {
-    PlayerActivity.isFavourite = false
+      isFavourite = false
     FavouriteActivity.favouriteSongs.forEachIndexed { index, music ->
         if (id == music.id) {
-            PlayerActivity.isFavourite = true
+              isFavourite = true
             return index
         }
     }

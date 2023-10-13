@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".ui.recommend.RecommendActivity">
 
+
     <LinearLayout
         android:id="@+id/recommendToolbar"
         android:layout_width="match_parent"

@@ -19,11 +19,11 @@ import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityMainBinding
 import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
-import com.example.m5.ui.searchMusic.MusicAdapter
-import com.example.m5.util.LocalMusic
 import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist
+import com.example.m5.util.PlayMusic.Companion.isPlaying
+import com.example.m5.util.PlayMusic.Companion.musicService
 import com.example.m5.util.exitApplication
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
@@ -35,14 +35,11 @@ import java.io.File
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
-//    private lateinit var musicAdapter: MusicAdapter
     private lateinit var musicAdapterX: MusicAdapterX
 
     companion object {
-        lateinit var MusicListMA: ArrayList<Music>
         lateinit var MusicListMAX: ArrayList<StandardSongData>
         lateinit var musicListSearch: ArrayList<StandardSongData>
-        lateinit var musicListSearchX: ArrayList<StandardSongData>
         var search: Boolean = false
         var themeIndex: Int = 2
         val currentTheme = arrayOf(
@@ -129,7 +126,7 @@ class MainActivity : AppCompatActivity() {
         //长按进行歌单的打乱(我还没有做持久化)
         //todo 进行打乱的歌单的持久化
         binding.shuffleBtn.setOnLongClickListener {
-            MusicListMA.shuffle()
+            MusicListMAX.shuffle()
             musicAdapterX.notifyDataSetChanged()
             true
         }
@@ -219,7 +216,7 @@ class MainActivity : AppCompatActivity() {
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
         sortOrder = sortEditor.getInt("sortOrder", 0)
         //扫描得到歌单
-        MusicListMA = getAllAudio()
+//        MusicListMA = getAllAudio()
         MusicListMAX = getAllAudioX(this)
 
         // 设置 RecyclerView 的固定大小以及缓存的项数，以优化性能
@@ -294,7 +291,7 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!PlayerActivity.isPlaying && PlayerActivity.musicService != null) {
+        if (!isPlaying && musicService != null) {
             exitApplication()
         }
     }

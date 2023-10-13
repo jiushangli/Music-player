@@ -56,7 +56,7 @@ class SettingActivity : AppCompatActivity() {
         binding.kiss.setOnClickListener {
 
             Toast.makeText(this, "here", Toast.LENGTH_SHORT).show()
-            var mediaPlayer: MediaPlayer? = MediaPlayer()
+            val mediaPlayer: MediaPlayer? = MediaPlayer()
 
             /*    ServiceSongUrl.getUrlProxy(song) {
                     println(it)

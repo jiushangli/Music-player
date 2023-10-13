@@ -83,23 +83,5 @@ class SearchActivity : AppCompatActivity() {
             }
         }
 
-        viewModel.urlLiveData.observe(this) { result->
-            val song: Data? = (result as Result<Data>).getOrNull()
-            Log.d("hucheng", "返回内容${song.toString()}")
-            song?.let { noNullSong->
-
-                //把音乐转成标准格式,传入参数url实现
-                viewModel.musicList[viewModel.postion].let {
-                    PlayerActivity.musicListNE.add(it.switchToStandard())
-                }
-
-                val intent = Intent(this, PlayerActivity::class.java).setAction("your.custom.action")
-                intent.putExtra("index", 0)
-                intent.putExtra("class", "SearchActivity")
-                ContextCompat.startActivity(this, intent, null)
-
-            }
-        }
-
     }
 }

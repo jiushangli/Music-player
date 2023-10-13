@@ -46,7 +46,8 @@
         tools:targetApi="31">
         <activity
             android:name=".ui.recommend.RecommendActivity"
-            android:exported="false" />
+            android:exported="true" >
+        </activity>
         <activity
             android:name=".ui.personalPage.PersonalPageActivity"
             android:exported="false" />

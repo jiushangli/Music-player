@@ -11,7 +11,6 @@ import com.example.m5.R
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityFavouriteBinding
-import com.example.m5.util.checkPlaylist
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 import com.example.m5.util.updateFavourites
@@ -48,7 +47,7 @@ class FavouriteActivity : AppCompatActivity() {
         // 创建 MusicAdapter 实例，并传入 MainActivity 和音乐列表作为参数
 //        adapter = FavouriteAdapter(this, favouriteSongs)
         adapter =
-            MusicAdapterX(this@FavouriteActivity, favouriteSongs,favouriteActivity=true)        // 将 musicAdapter 设置为 musicRV 的适配器
+            MusicAdapterX(this@FavouriteActivity, favouriteSongs)        // 将 musicAdapter 设置为 musicRV 的适配器
         binding.favouriteRV.adapter = adapter
 
 

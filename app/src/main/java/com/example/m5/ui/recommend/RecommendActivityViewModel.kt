@@ -13,7 +13,7 @@ class RecommendActivityViewModel: ViewModel() {
     private var recommendLiveData = MutableLiveData<String>()
     private val getUrlLiveData = MutableLiveData<Pair<String, String>>()
 
-    var dailySongs =  ArrayList<DailySong>()
+    var dailySongs =  ArrayList<StandardSongData>()
     val musicList = ArrayList<Song>()
     var position: Int = 0
 

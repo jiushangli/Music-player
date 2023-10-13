@@ -15,22 +15,21 @@ import android.os.Looper
 import android.support.v4.media.MediaMetadataCompat
 import android.support.v4.media.session.MediaSessionCompat
 import android.support.v4.media.session.PlaybackStateCompat
-import android.util.Log
 import com.example.m5.MusicApplication
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
-import com.example.m5.data.SOURCE_NETEASE
 import com.example.m5.data.StandardSongData
+import com.example.m5.data.musicListPA
+import com.example.m5.data.songPosition
 import com.example.m5.frag.NowPlaying
 import com.example.m5.temp.ServiceSongUrl
 import com.example.m5.temp.ServiceSongUrl.getUrlProxy
 import com.example.m5.util.NotificationReceiver
+import com.example.m5.util.PlayMusic.Companion.isPlaying
 import com.example.m5.util.formatDuration
 import com.example.m5.util.getImgArt
 import com.example.m5.util.runOnMainThread
-import com.google.android.material.color.utilities.MaterialDynamicColors.onError
-import com.google.gson.Gson
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     private var myBinder = MyBinder()
@@ -56,7 +55,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     fun showNotification(playPauseBtn: Int, playbackSpeed: Float) {
         val intent = Intent(baseContext, MainActivity::class.java)
-        intent.putExtra("index", PlayerActivity.songPosition)
+        intent.putExtra("index", songPosition)
         intent.putExtra("class", "NowPlaying")
         val contentIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_IMMUTABLE)
 
@@ -86,7 +85,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         val exitPendingIntent = PendingIntent.getBroadcast(baseContext, 0, exitIntent, flag)
 
         val imgArt =
-            getImgArt(PlayerActivity.musicListPA[PlayerActivity.songPosition].localInfo?.path!!)
+            getImgArt(musicListPA[songPosition].localInfo?.path!!)
         val image = if (imgArt != null) {
             BitmapFactory.decodeByteArray(imgArt, 0, imgArt.size)
         } else {
@@ -96,9 +95,9 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         val notification =
             androidx.core.app.NotificationCompat.Builder(baseContext, MusicApplication.CHANNEL_ID)
                 .setContentIntent(contentIntent)
-                .setContentTitle(PlayerActivity.musicListPA[PlayerActivity.songPosition].name)
+                .setContentTitle(musicListPA[songPosition].name)
                 .setContentText(
-                    PlayerActivity.musicListPA[PlayerActivity.songPosition].artists?.get(
+                    musicListPA[songPosition].artists?.get(
                         0
                     )?.name
                 )
@@ -197,7 +196,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PlayerActivity.binding.seekBarPA.progress = 0
             PlayerActivity.binding.seekBarPA.max = mediaPlayer!!.duration
             PlayerActivity.nowPlayingId =
-                PlayerActivity.musicListPA[PlayerActivity.songPosition].id.toString()
+                musicListPA[songPosition].id.toString()
         } catch (e: Exception) {
             return
         }
@@ -218,7 +217,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             //暂停音乐
             PlayerActivity.binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
             NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.play_icon)
-            PlayerActivity.isPlaying = false
+            isPlaying = false
             mediaPlayer!!.pause()
             showNotification(R.drawable.play_icon, 0F)
 
@@ -227,7 +226,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
             PlayerActivity.binding.playPauseBtnPA.setBackgroundResource(R.drawable.ic_pause)
             NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
             showNotification(R.drawable.pause_icon, 1F)
-            PlayerActivity.isPlaying = true
+            isPlaying = true
             mediaPlayer!!.start()
         }
 

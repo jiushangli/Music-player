@@ -78,5 +78,15 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/playModeFA" />
 
-
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nowPlaying"
+        android:name="com.example.m5.frag.NowPlaying"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_now_playing" />
 </androidx.constraintlayout.widget.ConstraintLayout>

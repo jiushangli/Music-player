@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.bumptech.glide.Glide
@@ -12,15 +13,16 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.activity.PlayerActivity
-import com.example.m5.activity.PlayerActivity.Companion.musicListPA
+import com.example.m5.data.musicListPA
+import com.example.m5.data.songPosition
 import com.example.m5.databinding.FragmentNowPlayingBinding
+import com.example.m5.util.PlayMusic.Companion.isPlaying
+import com.example.m5.util.PlayMusic.Companion.musicService
 import com.example.m5.util.setSongPosition
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.withContext
+
 
 class NowPlaying : Fragment() {
     companion object {
@@ -38,56 +40,56 @@ class NowPlaying : Fragment() {
         binding = FragmentNowPlayingBinding.bind(view)
         binding.root.visibility = View.INVISIBLE
         binding.playPauseBtnNP.setOnClickListener {
-            if (PlayerActivity.musicService != null) {
-                if (PlayerActivity.isPlaying) pauseMusic()
+            if (musicService != null) {
+                if (isPlaying) pauseMusic()
                 else playMusic()
             }
         }
         binding.nextBtnNP.setOnClickListener {
-            if (PlayerActivity.musicService != null) {
+            if (musicService != null) {
                 setSongPosition(increment = true)
-                PlayerActivity.musicService!!.createMediaPlayer(musicListPA[PlayerActivity.songPosition])
+                musicService!!.createMediaPlayer(musicListPA[songPosition])
 
                 Glide.with(this)
-                    .load(musicListPA[PlayerActivity.songPosition].imageUrl)
+                    .load(musicListPA[songPosition].imageUrl)
                     .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                     .into(binding.songImgNP)
                 binding.songNameNP.text =
-                    musicListPA[PlayerActivity.songPosition].name
+                    musicListPA[songPosition].name
                 binding.artistNP.text =
-                    musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
-                PlayerActivity.musicService!!.showNotification(R.drawable.pause_icon,1F)
+                    musicListPA[songPosition].artists?.get(0)?.name
+                musicService!!.showNotification(R.drawable.pause_icon, 1F)
                 playMusic()
             }
         }
 
         binding.preBtnNP.setOnClickListener {
-            if (PlayerActivity.musicService != null) {
+            if (musicService != null) {
                 setSongPosition(increment = false)
-                PlayerActivity.musicService!!.createMediaPlayer(musicListPA[PlayerActivity.songPosition])
+                musicService!!.createMediaPlayer(musicListPA[songPosition])
 
                 Glide.with(this)
-                    .load(musicListPA[PlayerActivity.songPosition].imageUrl)
+                    .load(musicListPA[songPosition].imageUrl)
                     .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                     .into(binding.songImgNP)
                 binding.songNameNP.text =
-                    musicListPA[PlayerActivity.songPosition].name
+                    musicListPA[songPosition].name
                 binding.artistNP.text =
-                    musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
-                PlayerActivity.musicService!!.showNotification(R.drawable.pause_icon,1F)
+                    musicListPA[songPosition].artists?.get(0)?.name
+                musicService!!.showNotification(R.drawable.pause_icon, 1F)
                 playMusic()
             }
         }
 
 
         binding.root.setOnClickListener {
-            if (PlayerActivity.musicService != null) {
+            if (musicService != null) {
                 val intent =
                     Intent(
                         requireContext(),
                         PlayerActivity::class.java
                     ).setAction("your.custom.action")
-                intent.putExtra("index", PlayerActivity.songPosition)
+                intent.putExtra("index", songPosition)
                 intent.putExtra("class", "NowPlaying")
                 ContextCompat.startActivity(requireContext(), intent, null)
             }
@@ -99,33 +101,32 @@ class NowPlaying : Fragment() {
         super.onResume()
         binding.root.visibility = View.VISIBLE
 
-        if (PlayerActivity.musicService != null) {
-            binding.songNameNP.isSelected = true
+        if (musicService != null) {
             Glide.with(this)
-                .load(musicListPA[PlayerActivity.songPosition].imageUrl)
+                .load(musicListPA[songPosition].imageUrl)
                 .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                 .into(binding.songImgNP)
-            binding.songNameNP.text = musicListPA[PlayerActivity.songPosition].name
-            binding.artistNP.text = musicListPA[PlayerActivity.songPosition].artists?.get(0)?.name
-            if (PlayerActivity.isPlaying) binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
+            binding.songNameNP.text = musicListPA[songPosition].name
+            binding.artistNP.text = musicListPA[songPosition].artists?.get(0)?.name
+            if (isPlaying) binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
             else binding.playPauseBtnNP.setImageResource(R.drawable.play_frag)
         }
     }
 
     private fun playMusic() {
-        PlayerActivity.musicService!!.mediaPlayer!!.start()
+        musicService!!.mediaPlayer!!.start()
         binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
-        PlayerActivity.musicService!!.showNotification(R.drawable.pause_icon,1F)
-//        PlayerActivity.binding.nextBtnPA.setIconResource(R.drawable.pause_icon)
-        PlayerActivity.isPlaying = true
+        musicService!!.showNotification(R.drawable.pause_icon, 1F)
+//          binding.nextBtnPA.setIconResource(R.drawable.pause_icon)
+        isPlaying = true
     }
 
     private fun pauseMusic() {
-        PlayerActivity.musicService!!.mediaPlayer!!.pause()
+        musicService!!.mediaPlayer!!.pause()
         binding.playPauseBtnNP.setImageResource(R.drawable.play_frag)
-        PlayerActivity.musicService!!.showNotification(R.drawable.play_frag,0F)
-//        PlayerActivity.binding.nextBtnPA.setIconResource(R.drawable.play_icon)
-        PlayerActivity.isPlaying = false
+        musicService!!.showNotification(R.drawable.play_frag, 0F)
+//          binding.nextBtnPA.setIconResource(R.drawable.play_icon)
+        isPlaying = false
     }
 }
 

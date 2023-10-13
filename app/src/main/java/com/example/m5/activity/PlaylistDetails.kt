@@ -10,7 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
-import com.example.m5.activity.PlayerActivity
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.databinding.ActivityPlaylistDetailsBinding
 import com.example.m5.util.checkPlaylist
@@ -48,7 +47,7 @@ class PlaylistDetails : AppCompatActivity() {
         binding.playlistDetailsRV.setHasFixedSize(true)
         binding.playlistDetailsRV.layoutManager = LinearLayoutManager(this)
         adapter =
-            MusicAdapterX(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist, playlistDetails = true)
+            MusicAdapterX(this, PlaylistActivity.musicPlaylist.ref[currentPlaylistPos].playlist)
         binding.playlistDetailsRV.adapter = adapter
 
         binding.shuffleBtnPD.setOnClickListener {

@@ -1,5 +1,5 @@
 [versions]
-agp = "8.2.0-alpha15"
+agp = "8.1.0"
 android-mail = "1.6.2"
 blurimageviewlib = "2.0.1"
 blurkit = "1.1.1"

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.netEaseMineActivity.NetEaseMineActivity"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    tools:context=".ui.netEaseMineActivity.NetEaseMineActivity">
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/NeteaseEverything"
@@ -15,7 +15,7 @@
         android:layout_marginHorizontal="10dp"
         android:layout_marginTop="30dp"
         android:background="@drawable/rounded_background"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         tools:layout="@layout/fragment_netease_everything" />
@@ -29,6 +29,7 @@
         android:background="@drawable/rounded_background"
         android:backgroundTint="@color/android_green"
         android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@+id/NeteaseEverything"
         android:padding="10dp"
         android:paddingTop="10dp">
 
@@ -37,15 +38,15 @@
             android:layout_width="60dp"
             android:layout_height="60dp"
             android:layout_marginHorizontal="10dp"
-            android:src="@mipmap/music"
-            app:shapeAppearanceOverlay="@style/curved"/>
+            android:src="@drawable/netease_icon"
+            app:shapeAppearanceOverlay="@style/curved" />
 
         <TextView
             android:id="@+id/usernameNMA"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
-            android:layout_marginLeft="10dp"
             android:text="@string/login"
             android:textColor="@color/black"
             android:textSize="26sp"
@@ -65,7 +66,7 @@
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/followedNMA"
@@ -77,8 +78,20 @@
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:textStyle="bold"
-                android:visibility="gone"/>
+                android:visibility="gone" />
         </LinearLayout>
     </LinearLayout>
 
-</LinearLayout>
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/nowPlaying"
+        android:name="com.example.m5.frag.NowPlaying"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/rounded_background"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout="@layout/fragment_now_playing" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

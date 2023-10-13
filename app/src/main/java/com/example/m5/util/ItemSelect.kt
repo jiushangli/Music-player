@@ -19,6 +19,9 @@ import com.example.m5.activity.PlaylistActivity
 import com.example.m5.activity.PlaylistDetails
 import com.example.m5.adapter.PlaylistViewAdapter
 import com.example.m5.data.StandardSongData
+import com.example.m5.data.musicListPA
+import com.example.m5.data.songPosition
+import com.example.m5.ui.recommend.RecommendActivity
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -32,7 +35,7 @@ fun showItemSelectDialog(context: Context, position: Int) {
     //根据环境选择显示歌曲的item
     when (context) {
         is PlayerActivity -> {
-            music = PlayerActivity.musicListPA[PlayerActivity.songPosition]
+            music = musicListPA[songPosition]
             dialog.findViewById<RelativeLayout>(R.id.deleteFromPlaylist)?.visibility = View.GONE
         }
 
@@ -49,6 +52,11 @@ fun showItemSelectDialog(context: Context, position: Int) {
             music = MainActivity.MusicListMAX[position]
             dialog.findViewById<RelativeLayout>(R.id.deleteFromPlaylist)?.visibility = View.GONE
         }
+
+        //默认
+        else -> {
+            music = RecommendActivity.recommendMusic[position]
+        }
     }
     showPlaylistSelectDialogMusic(dialog, context, music)
 
@@ -61,19 +69,19 @@ fun showItemSelectDialog(context: Context, position: Int) {
     //下一首播放
     dialog.findViewById<RelativeLayout>(R.id.playNext)?.setOnClickListener {
 
-        if (PlayerActivity.musicListPA.isNotEmpty()) {
+        if (musicListPA.isNotEmpty()) {
             var inx = -1
-            PlayerActivity.musicListPA.forEachIndexed { index, musicPA ->
+            musicListPA.forEachIndexed { index, musicPA ->
                 if (musicPA.id == music.id) {
                     inx = index
                 }
             }
             if (inx != -1)
-                PlayerActivity.musicListPA.removeAt(inx)
-            PlayerActivity.musicListPA.add(PlayerActivity.songPosition, music)
+                musicListPA.removeAt(inx)
+            musicListPA.add(songPosition, music)
 
         }
-        PlayerActivity.musicListPA.add(PlayerActivity.songPosition, music)
+        musicListPA.add(songPosition, music)
         Toast.makeText(context, "添加成功", Toast.LENGTH_SHORT).show()
         dialog.dismiss()
     }
