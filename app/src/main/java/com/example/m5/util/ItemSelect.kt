@@ -21,7 +21,7 @@ import com.example.m5.adapter.PlaylistViewAdapter
 import com.example.m5.data.StandardSongData
 import com.example.m5.data.musicListPA
 import com.example.m5.data.songPosition
-import com.example.m5.ui.recommend.RecommendActivity
+import com.example.m5.frag.RecommendMusic
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.imageview.ShapeableImageView
 
@@ -55,7 +55,7 @@ fun showItemSelectDialog(context: Context, position: Int) {
 
         //默认
         else -> {
-            music = RecommendActivity.recommendMusic[position]
+            music = RecommendMusic.recommendMusic[position]
         }
     }
     showPlaylistSelectDialogMusic(dialog, context, music)
