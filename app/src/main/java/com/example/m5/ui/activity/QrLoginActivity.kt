@@ -13,6 +13,8 @@ import com.example.m5.R
 import com.example.m5.databinding.ActivityQrLoginBinding
 import com.example.m5.ui.AppConfig
 import com.example.m5.ui.viewmodel.QrLoginActivityViewModel
+import com.example.m5.util.setStatusBarTextColor
+import com.example.m5.util.transparentStatusBar
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 
@@ -22,7 +24,7 @@ class QrLoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityQrLoginBinding
 
-    companion object{
+    companion object {
         var install: QrLoginActivity? = null
     }
 
@@ -34,43 +36,39 @@ class QrLoginActivity : AppCompatActivity() {
 
         binding = ActivityQrLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
+        //透明状态栏以及文字颜色设定
+        transparentStatusBar(window)
+        setStatusBarTextColor(window, false)
         install = this
-
-        Log.d("hucheng", "onCreate")
 
         //绑定
         //获取key
-        viewModel.keyFocusData.observe(this, Observer { result->
+        viewModel.keyFocusData.observe(this) { result ->
             val result = result.getOrNull()
-            if (result != null){
-                if(result?.code == "200"){
+            if (result != null) {
+                if (result.code == "200") {
                     val key = result.unikey
-                    Log.d("hucheng", key)
-                    viewModel.key = result?.unikey!!
-                    Log.d("hucheng", "key : ${viewModel.key}")
+                    viewModel.key = result.unikey
                     viewModel.getCode(key, System.currentTimeMillis().toString())
                 }
             }
 
-        })
+        }
 
         //获取二维码
-        viewModel.codeFocusData.observe(this, Observer{result->
+        viewModel.codeFocusData.observe(this) { result ->
             val result = result.getOrNull()
-            if(result != null){
+            if (result != null) {
                 Log.d("hucheng", "${result.qrurl} + ${result.qrimg}")
-                if(result.qrimg != null){
-                    binding.qrCodeImage.setImageBitmap(viewModel.base642Bitmap(result.qrimg))
-                    viewModel.bitmap = viewModel.base642Bitmap(result.qrimg)
-                    viewModel.getCodeStatus(viewModel.key)
+                binding.qrCodeImage.setImageBitmap(viewModel.base642Bitmap(result.qrimg))
+                viewModel.bitmap = viewModel.base642Bitmap(result.qrimg)
+                viewModel.getCodeStatus(viewModel.key)
 
-                }
             }
-        })
+        }
 
         //监听扫码状态
-        viewModel.codeStatusFocusData.observe(this, Observer { result->
+        viewModel.codeStatusFocusData.observe(this, Observer { result ->
 //            val cookie = result
 //            AppConfig.cookie = result?.cookie!!
 //            Log.d("hucheng", "cookie : ${AppConfig.cookie}")
@@ -86,11 +84,7 @@ class QrLoginActivity : AppCompatActivity() {
             Log.d("hucheng", "Appconfig cookie: ${AppConfig.cookie}")
             viewModel.saveCookie(AppConfig.cookie)
             finish()
-
         })
-
-
-
 
 
         //开始时候获取
@@ -99,58 +93,20 @@ class QrLoginActivity : AppCompatActivity() {
 
         //点击保存图片
         binding.saveQrCode.setOnClickListener {
-            Toast.makeText(this, "点击了", Toast.LENGTH_SHORT).show()
-            if (viewModel.bitmap == null)
-                Toast.makeText(this, "图片尚未加载", Toast.LENGTH_SHORT).show()
-            else{
-                val picName = "NeteaseLoginQRCode.jpg"
-                try {
-                    val temp = ByteArrayOutputStream()
-                    viewModel.bitmap.compress(Bitmap.CompressFormat.JPEG, 0, temp)
-                    val byin = ByteArrayInputStream(temp.toByteArray())
-                    viewModel.insert2Album(byin, picName)
-                }catch (e: Exception){
-                    e.printStackTrace()
-                }
+            val picName = "NeteaseLoginQRCode.jpg"
+            try {
+                val temp = ByteArrayOutputStream()
+                viewModel.bitmap.compress(Bitmap.CompressFormat.JPEG, 0, temp)
+                val byin = ByteArrayInputStream(temp.toByteArray())
+                viewModel.insert2Album(byin, picName)
+            } catch (e: Exception) {
+                e.printStackTrace()
             }
+
+            Toast.makeText(this, "保存成功", Toast.LENGTH_SHORT).show()
+
         }
 
 
     }
-
-    override fun onRestart() {
-        super.onRestart()
-        Log.d("hucheng", "onRestart")
-        Log.d("hucheng", "${AppConfig.cookie}")
-
-//        if (AppConfig.cookie != null)
-//            finish()
-    }
-
-    override fun onStop() {
-        super.onStop()
-        Log.d("hucheng", "onStop")
-    }
-
-    override fun onStart() {
-        super.onStart()
-        Log.d("hucheng", "onStart")
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        Log.d("hucheng", "onDestroy")
-    }
-
-    override fun onResume() {
-        super.onResume()
-        Log.d("hucheng", "onResume")
-    }
-
-    override fun onPause() {
-        super.onPause()
-        Log.d("hucheng", "onPause")
-    }
-
-
 }

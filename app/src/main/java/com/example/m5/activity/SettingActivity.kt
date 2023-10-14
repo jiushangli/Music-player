@@ -19,10 +19,7 @@ class SettingActivity : AppCompatActivity() {
         binding = ActivitySettingBinding.inflate(layoutInflater)
         setContentView(binding.root)
         transparentStatusBar(window)
-        setStatusBarTextColor(window, true)
-//        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);  //透明状态栏
-        supportActionBar?.title = "设置"
-
+        setStatusBarTextColor(window, false)
 
         binding.coolGreenTheme.setOnClickListener { saveTheme(0) }
         binding.coolRedTheme.setOnClickListener { saveTheme(1) }
@@ -54,9 +51,7 @@ class SettingActivity : AppCompatActivity() {
                     MainActivity::class.java
                 ).setAction("your.custom.action")
             )
-
         }
-
     }
 
     private fun saveTheme(index: Int) {

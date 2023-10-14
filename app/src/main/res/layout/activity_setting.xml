@@ -5,8 +5,8 @@
     android:id="@+id/blurLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/moni1"
     blurkit:blk_blurRadius="25"
+    android:background="#fdfdf5"
     blurkit:blk_downscaleFactor="0.01"
     blurkit:blk_fps="1">
 
@@ -15,7 +15,7 @@
         android:layout_height="match_parent"
         android:orientation="vertical"
         android:padding="10dp"
-        android:layout_marginTop="30dp"
+        android:layout_marginTop="50dp"
         tools:context=".activity.SettingActivity">
 
         <LinearLayout
