@@ -1,4 +1,4 @@
-package com.example.m5.ui.login.QRcodelogin
+package com.example.m5.ui.viewmodel
 
 import android.content.ContentValues
 import android.content.Intent

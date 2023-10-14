@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseCloudMusic
+package com.example.m5.ui.adapter
 
 import android.view.LayoutInflater
 import android.view.View
@@ -9,6 +9,7 @@ import androidx.viewpager.widget.PagerAdapter
 import com.bumptech.glide.Glide
 import com.example.m5.R
 import com.example.m5.logic.model.MusicAl
+import com.example.m5.ui.activity.NeBrowseActivity
 
 class ViewPagerAdapter(val musicAls: List<MusicAl>): PagerAdapter() {
 

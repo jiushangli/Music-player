@@ -1,4 +1,4 @@
-package com.example.m5.plugin;
+package com.example.m5.util.plugin;
 
 public class PluginConstants {
     public static final String FIELD_ACTIVITY = "activity";

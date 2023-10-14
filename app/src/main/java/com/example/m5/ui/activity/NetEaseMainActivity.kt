@@ -1,6 +1,5 @@
-package com.example.m5.ui.netEaseMineActivity
+package com.example.m5.ui.activity
 
-import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
@@ -8,9 +7,10 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.m5.activity.MainActivity
 import com.example.m5.databinding.ActivityNetEaseMineBinding
-import com.example.m5.frag.NeteaseMine
-import com.example.m5.frag.RecommendMusic
-import com.example.m5.ui.login.QRcodelogin.QrLoginActivity
+import com.example.m5.ui.frag.NeteaseMine
+import com.example.m5.ui.frag.RecommendMusic
+import com.example.m5.ui.frag.SearchMusic
+import com.example.m5.ui.viewmodel.NetEaseMainViewModel
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 
@@ -40,16 +40,18 @@ class NetEaseMainActivity : AppCompatActivity() {
         install = this
 
         //这是activity自带的,不用提取到fragment
-        binding.viewPager2.offscreenPageLimit = 8
+        binding.viewPager2.offscreenPageLimit = 4
         binding.viewPager2.adapter = object : FragmentStateAdapter(this) {
             override fun getItemCount(): Int {
-                return 2
+                return 4
             }
 
             override fun createFragment(position: Int): Fragment {
                 return when (position) {
                     0 -> NeteaseMine()
-                    else -> RecommendMusic()
+                    1 -> RecommendMusic()
+                    7 -> SearchMusic()
+                    else -> SearchMusic()
                 }
             }
         }

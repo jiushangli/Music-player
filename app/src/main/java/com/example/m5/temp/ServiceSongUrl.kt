@@ -2,20 +2,18 @@ package com.example.m5.temp
 
 import android.content.ContentUris
 import android.net.Uri
-import android.util.Log
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.SOURCE_NETEASE
 import com.example.m5.data.StandardSongData
 import com.example.m5.logic.network.MusicNetwork
-import com.example.m5.plugin.PluginConstants
-import com.example.m5.plugin.PluginSupport
+import com.example.m5.util.plugin.PluginConstants
+import com.example.m5.util.plugin.PluginSupport
 import com.example.m5.temp.ServiceSongUrl.getUrlProxy
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.log
 
 /**
  * 获取歌曲 URL
@@ -37,7 +35,8 @@ object ServiceSongUrl {
     @OptIn(DelicateCoroutinesApi::class)
     inline fun getUrl(song: StandardSongData, crossinline success: (Any?) -> Unit) {
         PluginSupport.setSong(song)
-        val pluginUrl = PluginSupport.apply(PluginConstants.POINT_SONG_URL)
+        val pluginUrl = PluginSupport.apply(
+            PluginConstants.POINT_SONG_URL)
         if (pluginUrl != null && pluginUrl is String) {
             success.invoke(pluginUrl)
             return

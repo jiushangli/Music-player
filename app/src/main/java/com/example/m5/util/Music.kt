@@ -26,8 +26,6 @@ data class Music(
     val id: String, val title: String, val album: String,
     val artist: String, val duration: Long = 0, val path: String, val artUri: String
 )
-data class Song(val name: String, val id: Long, val ar: List<Ar>, val al: Al, val free: Boolean)
-
 
 lateinit var music: StandardSongData
 

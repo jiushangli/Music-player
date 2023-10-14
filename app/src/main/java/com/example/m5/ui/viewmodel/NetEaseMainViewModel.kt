@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseMineActivity
+package com.example.m5.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel

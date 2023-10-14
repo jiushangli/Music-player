@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseCloudMusic
+package com.example.m5.ui.adapter
 
 import android.util.Log
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.m5.R
 import com.example.m5.logic.model.HotMusic
+import com.example.m5.ui.activity.NeBrowseActivity
 
 class HotMusicAdapter(private val musics: List<HotMusic>): RecyclerView.Adapter<HotMusicAdapter.ViewHolder>() {
 

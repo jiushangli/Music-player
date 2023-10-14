@@ -1,4 +1,4 @@
-package com.example.m5.frag
+package com.example.m5.ui.frag
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityRecommendBinding
+import com.example.m5.ui.viewmodel.RecommendViewModel
 import com.example.m5.logic.model.DailySong
 import com.example.m5.ui.AppConfig
 

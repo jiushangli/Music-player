@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseCloudMusic
+package com.example.m5.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations

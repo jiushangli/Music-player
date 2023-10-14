@@ -1,19 +1,16 @@
-package com.example.m5.frag
+package com.example.m5.ui.viewmodel
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import com.example.m5.data.StandardSongData
 import com.example.m5.logic.Repository
-import com.example.m5.logic.model.Song
 
 class RecommendViewModel: ViewModel() {
 
     private var recommendLiveData = MutableLiveData<String>()
-    private val getUrlLiveData = MutableLiveData<Pair<String, String>>()
 
     var dailySongs =  ArrayList<StandardSongData>()
-    val musicList = ArrayList<Song>()
     var position: Int = 0
 
 
@@ -21,17 +18,8 @@ class RecommendViewModel: ViewModel() {
         Repository.getRecommend(cookie)
     }
 
-
-    val urlLiveData = Transformations.switchMap(getUrlLiveData){pair->
-        Repository.getUrl(pair.first, pair.second)
-    }
-
     fun getRecommend(cookie: String?){
         recommendLiveData.value = cookie
-    }
-
-    fun getUrl(pair: Pair<String, String>){
-        getUrlLiveData.value = pair
     }
 
 

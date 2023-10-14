@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseCloudMusic
+package com.example.m5.ui.adapter
 
 import android.content.Context
 import android.view.LayoutInflater
@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.m5.databinding.ItemPlaylistBinding
 import com.example.m5.logic.model.PlayList
+import com.example.m5.ui.activity.NeBrowseActivity
 
 class PlayListsAdapter(
     private val playLists: ArrayList<PlayList>,

@@ -1,4 +1,4 @@
-package com.example.m5.frag
+package com.example.m5.ui.frag
 
 import android.content.Intent
 import android.os.Bundle
@@ -8,8 +8,9 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.m5.databinding.FragmentNeteaseMineBinding
+import com.example.m5.ui.viewmodel.NetEaseMineViewModel
 import com.example.m5.ui.AppConfig
-import com.example.m5.ui.login.QRcodelogin.QrLoginActivity
+import com.example.m5.ui.activity.QrLoginActivity
 
 class NeteaseMine : Fragment() {
 

@@ -1,4 +1,4 @@
-package com.example.m5.ui.login.QRcodelogin
+package com.example.m5.ui.activity
 
 import android.graphics.Bitmap
 import android.os.Build
@@ -12,6 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.databinding.ActivityQrLoginBinding
 import com.example.m5.ui.AppConfig
+import com.example.m5.ui.viewmodel.QrLoginActivityViewModel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 

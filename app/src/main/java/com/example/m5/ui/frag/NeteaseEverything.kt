@@ -1,4 +1,4 @@
-package com.example.m5.frag
+package com.example.m5.ui.frag
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,7 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
 import com.example.m5.databinding.FragmentNeteaseEverythingBinding
-import com.example.m5.ui.netEaseMineActivity.NetEaseMainViewModel
+import com.example.m5.ui.viewmodel.NetEaseMainViewModel
 
 class NeteaseEverything : Fragment() {
     private lateinit var viewModel: NetEaseMainViewModel
@@ -35,19 +35,19 @@ class NeteaseEverything : Fragment() {
             viewModel.netEasePage.value = 1
         }
         binding.RadioBtnNF.setOnClickListener {
-            viewModel.netEasePage.value = 2
+//            viewModel.netEasePage.value = 2
         }
         binding.BrowseBtnNF.setOnClickListener {
             viewModel.netEasePage.value = 3
         }
         binding.LibraryNF.setOnClickListener {
-            viewModel.netEasePage.value = 4
+//            viewModel.netEasePage.value = 4
         }
         binding.CloudDriveNF.setOnClickListener {
-            viewModel.netEasePage.value = 5
+//            viewModel.netEasePage.value = 5
         }
         binding.RecentlyPlayedNF.setOnClickListener {
-            viewModel.netEasePage.value = 6
+//            viewModel.netEasePage.value = 6
         }
         binding.SearchNF.setOnClickListener {
             viewModel.netEasePage.value = 7

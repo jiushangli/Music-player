@@ -7,56 +7,13 @@
     android:orientation="vertical"
     tools:context=".ui.searchMusic.SearchActivity">
 
+    <include
+        android:id="@+id/toolbarSearch"
+        layout="@layout/toolbar" />
 
-    <RelativeLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
-
-        <include
-            android:id="@+id/toolbarSearch"
-            layout="@layout/toolbar" />
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/showMusic"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbarSearch"
-            android:visibility="gone" />
-
-
-        <LinearLayout
-            android:id="@+id/show"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbarSearch"
-            android:orientation="vertical" />
-
-        <LinearLayout
-            android:id="@+id/history"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:layout_below="@+id/toolbarSearch"
-            android:orientation="vertical">
-
-            <!--            <com.zhy.view.flowlayout.FlowLayout-->
-            <!--                android:id="@+id/flowlayout"-->
-            <!--                android:layout_width="match_parent"-->
-            <!--                android:layout_height="wrap_content"-->
-            <!--                android:layout_margin="8dp"/>-->
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/hotMusicList"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:layout_below="@+id/history"
-            android:background="@drawable/rounded_border"
-            android:orientation="vertical"
-            android:visibility="gone" />
-
-
-    </RelativeLayout>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/searchRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
 </LinearLayout>

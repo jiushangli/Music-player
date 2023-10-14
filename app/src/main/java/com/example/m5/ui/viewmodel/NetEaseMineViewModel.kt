@@ -1,4 +1,4 @@
-package com.example.m5.frag
+package com.example.m5.ui.viewmodel
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,7 +7,8 @@ import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.example.m5.logic.Repository
 import com.example.m5.ui.AppConfig
-import com.example.m5.ui.netEaseMineActivity.NetEaseMainActivity
+import com.example.m5.ui.activity.NetEaseMainActivity
+import com.example.m5.ui.frag.NeteaseMine
 
 class NetEaseMineViewModel: ViewModel() {
 

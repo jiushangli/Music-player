@@ -1,4 +1,4 @@
-package com.example.m5.plugin;
+package com.example.m5.util.plugin;
 
 import android.app.Activity;
 import android.os.Build;

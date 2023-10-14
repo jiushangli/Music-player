@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseCloudMusic
+package com.example.m5.ui.activity
 
 import android.annotation.SuppressLint
 import android.graphics.Rect
@@ -11,6 +11,10 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.m5.R
 import com.example.m5.databinding.ActivityNcBinding
+import com.example.m5.ui.adapter.HotMusicAdapter
+import com.example.m5.ui.viewmodel.MusicActivityViewModel
+import com.example.m5.ui.adapter.PlayListsAdapter
+import com.example.m5.ui.adapter.ViewPagerAdapter
 import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 

@@ -18,7 +18,7 @@ import com.example.m5.R
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityMainBinding
-import com.example.m5.ui.netEaseMineActivity.NetEaseMainActivity
+import com.example.m5.ui.activity.NetEaseMainActivity
 import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist

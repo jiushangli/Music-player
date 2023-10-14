@@ -8,7 +8,7 @@
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/NeteaseEverything"
-        android:name="com.example.m5.frag.NeteaseEverything"
+        android:name="com.example.m5.ui.frag.NeteaseEverything"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="10dp"
