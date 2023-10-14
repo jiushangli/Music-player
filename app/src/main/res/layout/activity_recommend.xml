@@ -7,28 +7,15 @@
     tools:context=".ui.recommend.RecommendActivity">
 
 
-    <LinearLayout
-        android:id="@+id/recommendToolbar"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:id="@+id/playAll"
-            android:text="@string/playAll"
-            android:textColor="@color/bordeaux_red"/>
-
-
-    </LinearLayout>
-
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recommendRecyclerView"
         android:layout_width="match_parent"
-        android:layout_below="@+id/recommendToolbar"
-        android:layout_height="match_parent"/>
+        android:layout_height="match_parent" />
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:text="kiss" />
 </RelativeLayout>

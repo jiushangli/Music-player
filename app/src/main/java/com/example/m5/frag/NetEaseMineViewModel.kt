@@ -1,4 +1,4 @@
-package com.example.m5.ui.netEaseMineActivity
+package com.example.m5.frag
 
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
@@ -7,25 +7,17 @@ import androidx.lifecycle.ViewModel
 import com.bumptech.glide.Glide
 import com.example.m5.logic.Repository
 import com.example.m5.ui.AppConfig
+import com.example.m5.ui.netEaseMineActivity.NetEaseMainActivity
 
-class NetEaseMineActivityViewModel: ViewModel() {
-
+class NetEaseMineViewModel: ViewModel() {
 
     companion object{
-
-
-
         //网络图片加载图片
         fun loadPicture(url: String){
-                Glide.with(NetEaseMineActivity.install!!)
+                Glide.with(NetEaseMainActivity.install!!)
                     .load(url)
-                    .into(NetEaseMineActivity.install!!.binding.userImgNMA)
+                    .into(NeteaseMine.install!!.binding.userImgNMA)
         }
-
-
-
-
-
     }
 
     private val statusliveData = MutableLiveData<Pair<String, String>>()
@@ -42,8 +34,6 @@ class NetEaseMineActivityViewModel: ViewModel() {
     }
 
 
-
-
     //持久化层
     fun isCookieSaved() = Repository.isCookieSaved()
 
@@ -52,9 +42,5 @@ class NetEaseMineActivityViewModel: ViewModel() {
     fun isUidSaved() = Repository.isUidSaved()
 
     fun getSavedUid() = Repository.getSavedUid()
-
-
-
-
 
 }

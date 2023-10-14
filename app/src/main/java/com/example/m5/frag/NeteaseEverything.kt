@@ -1,21 +1,18 @@
 package com.example.m5.frag
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.activity.MainActivity
-import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
 import com.example.m5.databinding.FragmentNeteaseEverythingBinding
-import com.example.m5.ui.netEaseCloudMusic.NeBrowseActivity
-import com.example.m5.ui.recommend.RecommendActivity
-import com.example.m5.ui.searchMusic.SearchActivity
+import com.example.m5.ui.netEaseMineActivity.NetEaseMainViewModel
 
 class NeteaseEverything : Fragment() {
+    private lateinit var viewModel: NetEaseMainViewModel
     companion object {
         @Suppress("StaticFieldLeak")
         lateinit var binding: FragmentNeteaseEverythingBinding
@@ -29,41 +26,31 @@ class NeteaseEverything : Fragment() {
         requireContext().theme.applyStyle(MainActivity.currentTheme[MainActivity.themeIndex], true)
         val view = inflater.inflate(R.layout.fragment_netease_everything, container, false)
         binding = FragmentNeteaseEverythingBinding.bind(view)
+        viewModel = ViewModelProvider(requireActivity())[NetEaseMainViewModel::class.java]
 
         binding.NetEaseBtnNF.setOnClickListener {
-            val intent =
-                Intent(
-                    requireContext(),
-                    NetEaseMineActivity::class.java
-                ).setAction("your.custom.action")
-            ContextCompat.startActivity(requireContext(), intent, null)
+            viewModel.netEasePage.value = 0
+        }
+        binding.RecommendedBtnNF.setOnClickListener {
+            viewModel.netEasePage.value = 1
+        }
+        binding.RadioBtnNF.setOnClickListener {
+            viewModel.netEasePage.value = 2
         }
         binding.BrowseBtnNF.setOnClickListener {
-            val intent =
-                Intent(
-                    requireContext(),
-                    NeBrowseActivity::class.java
-                ).setAction("your.custom.action")
-            ContextCompat.startActivity(requireContext(), intent, null)
+            viewModel.netEasePage.value = 3
         }
-
+        binding.LibraryNF.setOnClickListener {
+            viewModel.netEasePage.value = 4
+        }
+        binding.CloudDriveNF.setOnClickListener {
+            viewModel.netEasePage.value = 5
+        }
+        binding.RecentlyPlayedNF.setOnClickListener {
+            viewModel.netEasePage.value = 6
+        }
         binding.SearchNF.setOnClickListener {
-            val intent =
-                Intent(
-                    requireContext(),
-                    SearchActivity::class.java
-                ).setAction("your.custom.action")
-            ContextCompat.startActivity(requireContext(), intent, null)
-        }
-
-
-        binding.RecommendedBtnNF.setOnClickListener {
-            val intent =
-                Intent(
-                    requireContext(),
-                    RecommendActivity::class.java
-                ).setAction("your.custom.action")
-            ContextCompat.startActivity(requireContext(), intent, null)
+            viewModel.netEasePage.value = 7
         }
 
 

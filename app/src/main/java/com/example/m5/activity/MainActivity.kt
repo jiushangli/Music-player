@@ -18,7 +18,7 @@ import com.example.m5.R
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
 import com.example.m5.databinding.ActivityMainBinding
-import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivity
+import com.example.m5.ui.netEaseMineActivity.NetEaseMainActivity
 import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist
@@ -97,7 +97,7 @@ class MainActivity : AppCompatActivity() {
 
         //点击跳转网易云音乐源
         binding.NetEaseBtn.setOnClickListener {
-            val intent: Intent = Intent(this, NetEaseMineActivity::class.java).setAction("your.custom.action")
+            val intent: Intent = Intent(this, NetEaseMainActivity::class.java).setAction("your.custom.action")
             startActivity(intent)
         }
 

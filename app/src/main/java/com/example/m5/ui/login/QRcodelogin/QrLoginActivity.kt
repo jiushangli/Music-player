@@ -5,7 +5,6 @@ import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.lifecycle.Observer
@@ -13,7 +12,6 @@ import androidx.lifecycle.ViewModelProvider
 import com.example.m5.R
 import com.example.m5.databinding.ActivityQrLoginBinding
 import com.example.m5.ui.AppConfig
-import com.example.m5.ui.netEaseMineActivity.NetEaseMineActivityViewModel
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 

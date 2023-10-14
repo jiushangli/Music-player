@@ -55,7 +55,7 @@
             android:name=".ui.login.QRcodelogin.QrLoginActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.netEaseMineActivity.NetEaseMineActivity"
+            android:name=".ui.netEaseMineActivity.NetEaseMainActivity"
             android:exported="false" />
 
         <service
