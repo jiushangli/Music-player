@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.m5.activity.MainActivity
 import com.example.m5.databinding.ActivityNetEaseMainBinding
+import com.example.m5.ui.frag.NeteaseBrowse
 import com.example.m5.ui.frag.NeteaseMine
 import com.example.m5.ui.frag.RecommendMusic
 import com.example.m5.ui.frag.SearchMusic
@@ -50,7 +51,8 @@ class NetEaseMainActivity : AppCompatActivity() {
                 return when (position) {
                     0 -> NeteaseMine()
                     1 -> RecommendMusic()
-                    7 -> SearchMusic()
+                    2 ->NeteaseBrowse()
+                    3 -> SearchMusic()
                     else -> SearchMusic()
                 }
             }

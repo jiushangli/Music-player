@@ -41,7 +41,7 @@ class RecommendMusic : Fragment() {
         //绑定adapter
         val layoutManagerRecommend = LinearLayoutManager(this.context)
         binding.recommendRecyclerView.layoutManager = layoutManagerRecommend
-        val musicAdapter = MusicAdapterX(this.requireContext(),viewModel.dailySongs )
+        val musicAdapter = MusicAdapterX(this.requireContext(),viewModel.dailySongs)
         binding.recommendRecyclerView.adapter = musicAdapter
 
 

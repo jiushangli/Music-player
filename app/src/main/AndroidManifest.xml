@@ -44,13 +44,7 @@
         android:supportsRtl="true"
         android:theme="@style/splash_screen"
         tools:targetApi="31">
-        <activity
-            android:name=".ui.recommend.RecommendActivity"
-            android:exported="true" >
-        </activity>
-        <activity
-            android:name=".ui.personalPage.PersonalPageActivity"
-            android:exported="false" />
+
         <activity
             android:name=".ui.activity.QrLoginActivity"
             android:exported="false" />
@@ -66,9 +60,16 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".activity.SettingActivity"
-            android:exported="false"
+            android:exported="true"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+            tools:ignore="LockedOrientationActivity" >
+
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
         <activity
             android:name=".activity.FeedbackActivity"
             android:exported="false"
@@ -99,37 +100,23 @@
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-        <activity
-            android:name=".ui.searchMusic.SearchActivity"
-            android:exported="false"
-            android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name=".activity.PlayerActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
-            <!--<intent-filter>
-                <action android:name="android.intent.action.VIEW" />
-
-                <category android:name="android.intent.category.BROWSABLE" />
-                <category android:name="android.intent.category.DEFAULT" />
-
-                <data
-                    android:mimeType="audio/*"
-                    android:scheme="content" />
-            </intent-filter>-->
         </activity>
         <activity
             android:name=".activity.MainActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
-            <intent-filter>
+            <!--<intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+            </intent-filter>-->
         </activity>
 
         <service android:name=".service.MusicService" />

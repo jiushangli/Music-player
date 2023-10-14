@@ -26,7 +26,6 @@ class NeBrowseActivity : AppCompatActivity() {
     private lateinit var binding: ActivityNcBinding
 
     private lateinit var adapterPlayList: PlayListsAdapter
-    private lateinit var adapterHotMusic: HotMusicAdapter
     private lateinit var adapterNewMusicAls: ViewPagerAdapter
 
 
@@ -40,20 +39,12 @@ class NeBrowseActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setTheme(R.style.coolBlack)
         instance = this
+
         binding = ActivityNcBinding.inflate(layoutInflater)
         setContentView(binding.root)
         transparentStatusBar(window)
         setStatusBarTextColor(window, light = false)
 
-//        val layoutManagerSearch = LinearLayoutManager(this)
-//        binding.recyclerView.layoutManager = layoutManagerSearch
-//        adapterSearch = MusicAdapter(viewModel.musicList)
-//        binding.recyclerView.adapter = adapterSearch
-
-/*        binding.rvPlaylistRecommend.layoutManager = GridLayoutManager(context, 2, GridLayoutManager.HORIZONTAL, false)
-        // binding.rvPlaylistRecommend.layoutManager = LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false)
-        binding.rvPlaylistRecommend.adapter = PlaylistRecommendAdapter(it)
-        */
         val layoutManagerPlayLists = GridLayoutManager(this,2,GridLayoutManager.HORIZONTAL,false)
         binding.recyclerViewPlaylist.layoutManager = layoutManagerPlayLists
         adapterPlayList = PlayListsAdapter(viewModel.playLists,this)
@@ -75,18 +66,6 @@ class NeBrowseActivity : AppCompatActivity() {
         }
         binding.recyclerViewPlaylist.addItemDecoration(decoration)
 
-/*        val layoutManagerHotMusic = LinearLayoutManager(this)
-        layoutManagerHotMusic.orientation = LinearLayoutManager.HORIZONTAL
-        binding.hotMusics.layoutManager = layoutManagerHotMusic
-        adapterHotMusic = HotMiusicAdapter(viewModel.hotMusicLists)
-        binding.hotMusics.adapter = adapterHotMusic*/
-
-
-        adapterNewMusicAls = ViewPagerAdapter(viewModel.newMusicAls)
-/*        binding.loopViewPager.apply {
-            adapter = adapterNewMusicAls
-        }*/
-
         viewModel.refresh()
 
         viewModel.mainLiveData.observe(this) { result->
@@ -95,9 +74,7 @@ class NeBrowseActivity : AppCompatActivity() {
                 viewModel.playLists.addAll(mainNcResponse.playLists)
                 viewModel.hotMusicLists.addAll(mainNcResponse.hotMusics)
                 viewModel.newMusicAls.addAll(mainNcResponse.newMusicesAls)
-                Log.d("hucheng", "Activity palylists ${viewModel.playLists}")
-                Log.d("hucheng", "Activity hotmusics ${viewModel.hotMusicLists}")
-                Log.d("hucheng", "Activity newmusicAl ${viewModel.newMusicAls}")
+
                 adapterPlayList.notifyDataSetChanged()
                 adapterPlayList.notifyDataSetChanged()
                 adapterNewMusicAls.notifyDataSetChanged()

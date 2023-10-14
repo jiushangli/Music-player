@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.example.m5.databinding.ItemPlaylistBinding
 import com.example.m5.logic.model.PlayList
 import com.example.m5.ui.activity.NeBrowseActivity
+import com.example.m5.ui.frag.NeteaseBrowse
 
 class PlayListsAdapter(
     private val playLists: ArrayList<PlayList>,
@@ -37,7 +38,7 @@ class PlayListsAdapter(
         //加载
         val playList = playLists[position]
         holder.name.text = playList.name
-        Glide.with(NeBrowseActivity.instance!!)
+        Glide.with(NeteaseBrowse.instance!!)
             .load(playList.coverImgUrl)
             .into(holder.image)
     }

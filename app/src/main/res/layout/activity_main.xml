@@ -126,7 +126,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            tools:layout="@layout/fragment_now_playing" />
+            tools:layout="@layout/fragment_now_playingX" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -38,7 +38,7 @@ class NeteaseEverything : Fragment() {
 //            viewModel.netEasePage.value = 2
         }
         binding.BrowseBtnNF.setOnClickListener {
-            viewModel.netEasePage.value = 3
+            viewModel.netEasePage.value = 2
         }
         binding.LibraryNF.setOnClickListener {
 //            viewModel.netEasePage.value = 4
@@ -50,7 +50,7 @@ class NeteaseEverything : Fragment() {
 //            viewModel.netEasePage.value = 6
         }
         binding.SearchNF.setOnClickListener {
-            viewModel.netEasePage.value = 7
+            viewModel.netEasePage.value = 3
         }
 
 
