@@ -2,6 +2,7 @@ package com.example.m5.util
 
 import android.media.MediaPlayer
 import android.util.Log
+import com.example.m5.R
 import com.example.m5.activity.PlayerActivity.Companion.nowPlayingId
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.StandardSongData
@@ -50,16 +51,15 @@ open class PlayMusic : MediaPlayer.OnCompletionListener {
             Log.d("yqhy", "返回内容${songUrl}")
             Log.d("yqhy", "音乐的id : ${song.id}")
 
-             musicService!!.mediaPlayer!!.setDataSource(songUrl)
-             musicService!!.mediaPlayer!!.prepare()
-             musicService!!.mediaPlayer!!.start()
+            musicService!!.mediaPlayer!!.setDataSource(songUrl)
+            musicService!!.mediaPlayer!!.prepare()
+            musicService!!.mediaPlayer!!.start()
             // ... 其他 UI 更新操作 ...
-             isPlaying = true
+            isPlaying = true
             //替换播放按钮
-
-             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
-             nowPlayingId =
-                 musicListPA[ songPosition].id!!
+            musicService!!.showNotification(R.drawable.ic_pause, 1F)
+            musicService!!.mediaPlayer!!.setOnCompletionListener(this)
+            nowPlayingId = musicListPA[songPosition].id!!
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -69,7 +69,7 @@ open class PlayMusic : MediaPlayer.OnCompletionListener {
     override fun onCompletion(p0: MediaPlayer?) {
         GlobalScope.launch(Dispatchers.Main) {
             setSongPosition(increment = true)
-            createMediaPlayer( musicListPA[ songPosition])
+            createMediaPlayer(musicListPA[songPosition])
         }
 
     }

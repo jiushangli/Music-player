@@ -114,7 +114,7 @@ class MusicAdapterX(
         notifyDataSetChanged()
     }
 
-    fun startService(
+    private fun startService(
         playlist: ArrayList<StandardSongData>,
         shuffle: Boolean,
         playNext: Boolean = false,

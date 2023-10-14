@@ -58,7 +58,7 @@ class NowPlaying : Fragment() {
                     musicListPA[songPosition].name
                 binding.artistNP.text =
                     musicListPA[songPosition].artists?.get(0)?.name
-                musicService!!.showNotification(R.drawable.pause_icon, 1F)
+//                musicService!!.showNotification(R.drawable.pause_icon, 1F)
                 playMusic()
             }
         }
@@ -76,7 +76,7 @@ class NowPlaying : Fragment() {
                     musicListPA[songPosition].name
                 binding.artistNP.text =
                     musicListPA[songPosition].artists?.get(0)?.name
-                musicService!!.showNotification(R.drawable.pause_icon, 1F)
+//                musicService!!.showNotification(R.drawable.pause_icon, 1F)
                 playMusic()
             }
         }
@@ -117,7 +117,6 @@ class NowPlaying : Fragment() {
         musicService!!.mediaPlayer!!.start()
         binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
         musicService!!.showNotification(R.drawable.pause_icon, 1F)
-//          binding.nextBtnPA.setIconResource(R.drawable.pause_icon)
         isPlaying = true
     }
 
@@ -125,7 +124,6 @@ class NowPlaying : Fragment() {
         musicService!!.mediaPlayer!!.pause()
         binding.playPauseBtnNP.setImageResource(R.drawable.play_frag)
         musicService!!.showNotification(R.drawable.play_frag, 0F)
-//          binding.nextBtnPA.setIconResource(R.drawable.play_icon)
         isPlaying = false
     }
 }

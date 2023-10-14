@@ -45,7 +45,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
-class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCompletionListener {
+class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     companion object {
         @SuppressLint("StaticFieldLeak")
         lateinit var binding: ActivityPlayerBinding
@@ -67,10 +67,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         setStatusBarTextColor(window, false)
 
         if (intent.data?.scheme.contentEquals("content")) {
-            val intentService = Intent(this, MusicService::class.java)
-            //绑定服务,其中BIND_AUTO_CREATE表示在Activity和Service建立关联后自动创建Service
-            bindService(intentService, this, BIND_AUTO_CREATE)
-            startService(intentService)
+
             musicListPA = ArrayList()
 
             musicListPA.add(getMusicDetails(intent.data!!))
@@ -82,6 +79,7 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             binding.songNamePA.text = musicListPA[songPosition].name
             binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
         } else
+
             initializeLayout()
 
         binding.navPA.setOnClickListener {
@@ -238,37 +236,30 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         //获取传递过来的数据,其中index为歌曲在列表中的位置,默认为0
         songPosition = intent.getIntExtra("index", 0)
 
-        //获取传递过来的数据,其中class为传递过来的类名
-        when (intent.getStringExtra("class")) {
-            "NowPlaying" -> {
-                setLayout()
-                binding.tvSeekBarStart.text =
-                    formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
-                binding.tvSeekBarEnd.text =
-                    formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
-                binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
-                binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-                if (isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-                else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
-            }
 
-            "SearchActivity" -> {
-                initServiceAndPlaylist(musicListNE, shuffle = false)
-                songPosition = intent.getIntExtra("index", 0)
-            }
-        }
+        setLayout()
+        binding.tvSeekBarStart.text =
+            formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
+        binding.tvSeekBarEnd.text =
+            formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
+        binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
+        binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
+        if (isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
+        else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
+        musicService!!.seekBarSetup()
+
     }
 
     private fun playMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-        musicService!!.showNotification(R.drawable.ic_pause, 1F)
+//        musicService!!.showNotification(R.drawable.ic_pause, 1F)
         isPlaying = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
-        musicService!!.showNotification(R.drawable.play_icon, 0F)
+//        musicService!!.showNotification(R.drawable.play_icon, 0F)
         isPlaying = false
         musicService!!.mediaPlayer!!.pause()
     }
@@ -285,30 +276,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
         }
     }
 
-    //为什么要用service的方式,这是为了让音乐播放器在后台运行,而不是在前台运行
-    @OptIn(DelicateCoroutinesApi::class)
-    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
-
-        GlobalScope.launch(Dispatchers.Main) {
-            if (musicService == null) {
-                val binder = service as MusicService.MyBinder
-                musicService = binder.currentService()
-                musicService!!.audioManager = getSystemService(AUDIO_SERVICE) as AudioManager
-                musicService!!.audioManager.requestAudioFocus(
-                    musicService,
-                    AudioManager.STREAM_MUSIC,
-                    AudioManager.AUDIOFOCUS_GAIN
-                )
-            }
-            PlayMusic().createMediaPlayer(musicListPA[songPosition])
-            musicService!!.seekBarSetup()
-        }
-    }
-
-    override fun onServiceDisconnected(p0: ComponentName?) {
-        musicService = null
-
-    }
 
     override fun onCompletion(p0: MediaPlayer?) {
         GlobalScope.launch(Dispatchers.Main) {
@@ -321,7 +288,6 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }
         }
     }
-
 
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -365,24 +331,5 @@ class PlayerActivity : AppCompatActivity(), ServiceConnection, MediaPlayer.OnCom
             }.start()
             dialog.dismiss()
         }
-    }
-
-    /*    override fun onDestroy() {
-            super.onDestroy()
-            if (musicListPA[songPosition].id == "Unknown" && !isPlaying) exitApplication()
-        }*/
-
-    private fun initServiceAndPlaylist(
-        playlist: ArrayList<StandardSongData>,
-        shuffle: Boolean,
-        playNext: Boolean = false
-    ) {
-        val intent = Intent(this, MusicService::class.java)
-        bindService(intent, this, BIND_AUTO_CREATE)
-        startService(intent)
-        musicListPA = ArrayList()
-        musicListPA.addAll(playlist)
-        if (shuffle) musicListPA.shuffle()
-        setLayout()
     }
 }
