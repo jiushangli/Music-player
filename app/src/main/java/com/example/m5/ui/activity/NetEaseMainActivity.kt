@@ -6,7 +6,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.example.m5.activity.MainActivity
-import com.example.m5.databinding.ActivityNetEaseMineBinding
+import com.example.m5.databinding.ActivityNetEaseMainBinding
 import com.example.m5.ui.frag.NeteaseMine
 import com.example.m5.ui.frag.RecommendMusic
 import com.example.m5.ui.frag.SearchMusic
@@ -16,7 +16,7 @@ import com.example.m5.util.transparentStatusBar
 
 class NetEaseMainActivity : AppCompatActivity() {
 
-    lateinit var binding: ActivityNetEaseMineBinding
+    lateinit var binding: ActivityNetEaseMainBinding
     private lateinit var viewModel: NetEaseMainViewModel
 
     companion object {
@@ -29,7 +29,7 @@ class NetEaseMainActivity : AppCompatActivity() {
         MainActivity.themeIndex = themeEditor.getInt("themeIndex", 0)
         setTheme(MainActivity.currentTheme[MainActivity.themeIndex])
 
-        binding = ActivityNetEaseMineBinding.inflate(layoutInflater)
+        binding = ActivityNetEaseMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         viewModel = ViewModelProvider(this)[NetEaseMainViewModel::class.java]

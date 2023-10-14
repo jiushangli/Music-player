@@ -32,6 +32,7 @@ import com.example.m5.util.getImgArt
 import com.example.m5.util.runOnMainThread
 
 class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
+
     private var myBinder = MyBinder()
     var mediaPlayer: MediaPlayer? = null
 
@@ -142,9 +143,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
         try {
             if (mediaPlayer == null) mediaPlayer = MediaPlayer()
             mediaPlayer!!.reset()
-//            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].url)
-//            mediaPlayer!!.setDataSource("http://m702.music.126.net/20231012204723/438f131c9f0d4f7b4a1afaf433fde371/jd-musicrep-ts/4b29/49a4/74b2/16ac0b6b3f53134ff6ad16f4f41d21eb.mp3")
-
 
             mediaPlayer.apply {
                 getUrlProxy(song) {

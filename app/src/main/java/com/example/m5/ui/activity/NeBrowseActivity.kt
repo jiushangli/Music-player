@@ -89,9 +89,6 @@ class NeBrowseActivity : AppCompatActivity() {
 
         viewModel.refresh()
 
-
-
-
         viewModel.mainLiveData.observe(this) { result->
             val mainNcResponse = result.getOrNull()
             if(mainNcResponse != null){
@@ -110,10 +107,6 @@ class NeBrowseActivity : AppCompatActivity() {
 
     }
 
-
-    override fun onRestart() {
-        super.onRestart()
-    }
 
     override fun onDestroy() {
         super.onDestroy()

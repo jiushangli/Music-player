@@ -5,6 +5,9 @@ import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
+import androidx.lifecycle.MutableLiveData
+import com.example.m5.service.MusicService
+import com.example.m5.util.PlayMusic
 
 class MusicApplication: Application() {
 
@@ -16,6 +19,8 @@ class MusicApplication: Application() {
         const val NEXT = "next"
         const val PREVIOUS = "previous"
         const val EXIT = "exit"
+
+        var musicService = MutableLiveData<MusicService>()
     }
 
 

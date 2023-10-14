@@ -1,15 +1,11 @@
 package com.example.m5.activity
 
 import android.annotation.SuppressLint
-import android.content.ComponentName
 import android.content.Intent
-import android.content.ServiceConnection
 import android.database.Cursor
-import android.media.AudioManager
 import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
-import android.os.IBinder
 import android.provider.MediaStore
 import android.widget.LinearLayout
 import android.widget.SeekBar
@@ -21,12 +17,10 @@ import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.StandardSongData
-import com.example.m5.data.musicListNE
 import com.example.m5.data.musicListPA
 import com.example.m5.data.repeatPlay
 import com.example.m5.data.songPosition
 import com.example.m5.databinding.ActivityPlayerBinding
-import com.example.m5.service.MusicService
 import com.example.m5.util.PlayMusic
 import com.example.m5.util.PlayMusic.Companion.isPlaying
 import com.example.m5.util.PlayMusic.Companion.musicService
@@ -40,7 +34,6 @@ import com.example.m5.util.showItemSelectDialog
 import com.example.m5.util.transparentStatusBar
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -233,9 +226,6 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     }
 
     private fun initializeLayout() {
-        //获取传递过来的数据,其中index为歌曲在列表中的位置,默认为0
-        songPosition = intent.getIntExtra("index", 0)
-
 
         setLayout()
         binding.tvSeekBarStart.text =
@@ -278,7 +268,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
 
     override fun onCompletion(p0: MediaPlayer?) {
-        GlobalScope.launch(Dispatchers.Main) {
+        GlobalScope.launch(Dispatchers.IO) {
             setSongPosition(increment = true)
             PlayMusic().createMediaPlayer(musicListPA[songPosition])
             try {

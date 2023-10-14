@@ -87,7 +87,7 @@ class MusicAdapterX(
                 }
             }
             PlayMusic.isPlaying = true
-            NowPlaying.binding
+
             Glide.with(context)
                 .load(musicListPA[songPosition].imageUrl)
                 .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())

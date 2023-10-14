@@ -23,13 +23,6 @@ class SettingActivity : AppCompatActivity() {
 //        window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);  //透明状态栏
         supportActionBar?.title = "设置"
 
-        /*        when (MainActivity.themeIndex) {
-                    0 -> binding.coolCyanTheme.setBackgroundColor(Color.WHITE)
-                    1 -> binding.coolRedTheme.setBackgroundColor(Color.WHITE)
-                    2 -> binding.coolGreenTheme.setBackgroundColor(Color.WHITE)
-                    3 -> binding.coolBlueTheme.setBackgroundColor(Color.WHITE)
-                    4 -> binding.coolBlackTheme.setBackgroundColor(Color.WHITE)
-                }*/
 
         binding.coolGreenTheme.setOnClickListener { saveTheme(0) }
         binding.coolRedTheme.setOnClickListener { saveTheme(1) }
@@ -55,42 +48,15 @@ class SettingActivity : AppCompatActivity() {
         }
         binding.kiss.setOnClickListener {
 
-            Toast.makeText(this, "here", Toast.LENGTH_SHORT).show()
-            val mediaPlayer: MediaPlayer? = MediaPlayer()
+            startActivity(
+                Intent(
+                    this,
+                    MainActivity::class.java
+                ).setAction("your.custom.action")
+            )
 
-            /*    ServiceSongUrl.getUrlProxy(song) {
-                    println(it)
-                }*/
-            mediaPlayer!!.reset()
-//            mediaPlayer!!.setDataSource(PlayerActivity.musicListPA[PlayerActivity.songPosition].url)
-            mediaPlayer.setDataSource("https://m802.music.126.net/20231012211412/c75662e6b34d05069ce421155bddc61b/jd-musicrep-ts/4b29/49a4/74b2/16ac0b6b3f53134ff6ad16f4f41d21eb.mp3")
-
-            mediaPlayer.prepare()
-            mediaPlayer.start()
         }
 
-//        binding.imgVague.refreshBG(binding.root);
-
-//        BlurImageView.doBlur(binding.imgVague, binding.root, 20, 1)
-//        binding.versionName.text = setVersionDetails()
-        //用于排序到时候用得上
-        /*        binding.sortBtn.setOnClickListener {
-                    val menuList = arrayOf("最近添加", "按名称排序", "按时长排序")
-                    var currentSort = MainActivity.sortOrder
-
-                    val builder = MaterialAlertDialogBuilder(this)
-                    builder.setTitle("Sorting")
-                        .setPositiveButton("OK") { _, _ ->
-                            val editor = getSharedPreferences("SORTING", MODE_PRIVATE).edit()
-                            editor.putInt("sortOrder", currentSort)
-                            editor.apply()
-                        }
-                        .setSingleChoiceItems(menuList, currentSort) { _, which ->
-                            currentSort = which
-                        }
-                    val customDialog = builder.create()
-                    customDialog.show()
-                }*/
     }
 
     private fun saveTheme(index: Int) {
@@ -104,7 +70,7 @@ class SettingActivity : AppCompatActivity() {
                     MainActivity::class.java
                 ).setAction("your.custom.action")
             )
-        }else{
+        } else {
             startActivity(
                 Intent(
                     this,
@@ -117,6 +83,7 @@ class SettingActivity : AppCompatActivity() {
     private fun setVersionDetails(): String {
         return "Version Name: 1.0"
     }
+
     override fun onStart() {
         super.onStart()
         binding.blurLayout.startBlur()

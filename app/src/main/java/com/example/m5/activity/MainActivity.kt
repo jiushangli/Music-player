@@ -14,10 +14,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
 import androidx.core.app.ActivityCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.bumptech.glide.Glide
+import com.bumptech.glide.request.RequestOptions
 import com.example.m5.R
 import com.example.m5.adapter.MusicAdapterX
 import com.example.m5.data.StandardSongData
+import com.example.m5.data.musicListPA
+import com.example.m5.data.songPosition
 import com.example.m5.databinding.ActivityMainBinding
+import com.example.m5.frag.NowPlaying
 import com.example.m5.ui.activity.NetEaseMainActivity
 import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
@@ -299,6 +304,7 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
+
         //存储我喜欢的歌
         val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavouriteActivity.favouriteSongs)
