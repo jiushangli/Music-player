@@ -76,31 +76,18 @@ class MusicAdapterX(
                 showItemSelectDialog(context, position)
             }
         holder.root.setOnClickListener {
-
             musicListPA = musicList
             songPosition = position
+
             if (musicService == null)
-                startService(musicList, shuffle = false, false, position)
+                startService(musicList, shuffle = false, position)
             else {
                 GlobalScope.launch(Dispatchers.Main) {
                     PlayMusic().createMediaPlayer(musicList[position])
                 }
             }
-            PlayMusic.isPlaying = true
-
-            Glide.with(context)
-                .load(musicListPA[songPosition].imageUrl)
-                .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
-                .into(NowPlaying.binding.songImgNP)
-
-            NowPlaying.binding.songNameNP.text = musicListPA[songPosition].name
-            NowPlaying.binding.artistNP.text = musicListPA[songPosition].artists?.get(0)?.name
-
-            if (PlayMusic.isPlaying) NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
-            else NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.play_frag)
-
+            PlayMusic.isPlaying.value = true
         }
-
     }
 
     override fun getItemCount(): Int {
@@ -117,7 +104,6 @@ class MusicAdapterX(
     private fun startService(
         playlist: ArrayList<StandardSongData>,
         shuffle: Boolean,
-        playNext: Boolean = false,
         position: Int
     ) {
         val intent = Intent(context, MusicService::class.java)
@@ -143,7 +129,6 @@ class MusicAdapterX(
                 )
             }
             PlayMusic().createMediaPlayer(musicListPA[songPosition])
-//            musicService!!.seekBarSetup()
         }
     }
 

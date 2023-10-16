@@ -19,7 +19,7 @@ class NeteaseBrowse : Fragment() {
     lateinit var binding: ActivityNcBinding
     private lateinit var viewModel: MusicActivityViewModel
     private lateinit var adapterPlayList: PlayListsAdapter
-    private lateinit var adapterNewMusicAls: ViewPagerAdapter
+
     companion object {
         var instance: NeteaseBrowse? = null
     }
@@ -61,7 +61,6 @@ class NeteaseBrowse : Fragment() {
         binding.recyclerViewPlaylist.addItemDecoration(decoration)
 
         viewModel.refresh()
-
         viewModel.mainLiveData.observe(this.viewLifecycleOwner) { result->
             val mainNcResponse = result.getOrNull()
             if(mainNcResponse != null){

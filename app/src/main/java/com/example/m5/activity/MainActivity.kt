@@ -1,13 +1,18 @@
 package com.example.m5.activity
 
 import android.annotation.SuppressLint
+import android.content.ComponentName
 import android.content.Intent
+import android.content.ServiceConnection
 import android.content.pm.PackageManager
+import android.media.AudioManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.IBinder
 import android.provider.MediaStore
 import android.view.Menu
+import android.view.View
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
@@ -23,10 +28,12 @@ import com.example.m5.data.musicListPA
 import com.example.m5.data.songPosition
 import com.example.m5.databinding.ActivityMainBinding
 import com.example.m5.frag.NowPlaying
+import com.example.m5.service.MusicService
 import com.example.m5.ui.activity.NetEaseMainActivity
 import com.example.m5.util.LocalMusic.getAllAudioX
 import com.example.m5.util.Music
 import com.example.m5.util.MusicPlaylist
+import com.example.m5.util.PlayMusic
 import com.example.m5.util.PlayMusic.Companion.isPlaying
 import com.example.m5.util.PlayMusic.Companion.musicService
 import com.example.m5.util.exitApplication
@@ -34,13 +41,17 @@ import com.example.m5.util.setStatusBarTextColor
 import com.example.m5.util.transparentStatusBar
 import com.google.gson.GsonBuilder
 import com.google.gson.reflect.TypeToken
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.File
 
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), ServiceConnection {
 
     private lateinit var binding: ActivityMainBinding
     private lateinit var musicAdapterX: MusicAdapterX
+
 
     companion object {
         lateinit var MusicListMAX: ArrayList<StandardSongData>
@@ -74,6 +85,12 @@ class MainActivity : AppCompatActivity() {
         transparentStatusBar(window)
         setStatusBarTextColor(window, false)
 
+
+
+        /*NowPlaying.binding.songNameNP.text = musicListPA[songPosition].name
+        NowPlaying.binding.artistNP.text = musicListPA[songPosition].artists?.get(0)?.name
+*/
+
         if (requestRuntimePermission()) {
             initializeLayout()
 
@@ -84,7 +101,8 @@ class MainActivity : AppCompatActivity() {
             val jsonString = editor.getString("FavouriteSongs", null)
             val typeToken = object : TypeToken<ArrayList<StandardSongData>>() {}.type
             if (jsonString != null) {
-                val data: ArrayList<StandardSongData> = GsonBuilder().create().fromJson(jsonString, typeToken)
+                val data: ArrayList<StandardSongData> =
+                    GsonBuilder().create().fromJson(jsonString, typeToken)
                 FavouriteActivity.favouriteSongs.addAll(data)
             }
 
@@ -99,10 +117,10 @@ class MainActivity : AppCompatActivity() {
         }
 
 
-
         //点击跳转网易云音乐源
         binding.NetEaseBtn.setOnClickListener {
-            val intent: Intent = Intent(this, NetEaseMainActivity::class.java).setAction("your.custom.action")
+            val intent: Intent =
+                Intent(this, NetEaseMainActivity::class.java).setAction("your.custom.action")
             startActivity(intent)
         }
 
@@ -119,15 +137,20 @@ class MainActivity : AppCompatActivity() {
 
         //从随机播放按钮跳到播放界面,并用intent带去一些远方的信息
         binding.shuffleBtn.setOnClickListener {
-            val intent = Intent(
-                this@MainActivity,
-                PlayerActivity::class.java
-            ).setAction("your.custom.action")
-            intent.putExtra("index", 0)
-            intent.putExtra("class", "MainActivity")
-            //点击随机播放跳到播放界面
-            startActivity(intent)
+            musicListPA = MusicListMAX
+            songPosition = 0
+
+            if (musicService == null)
+                startServicex(MusicListMAX, shuffle = false, songPosition)
+            else {
+                GlobalScope.launch(Dispatchers.Main) {
+                    PlayMusic().createMediaPlayer(MusicListMAX[songPosition])
+                }
+            }
+            isPlaying.value = true
         }
+
+
         //长按进行歌单的打乱(我还没有做持久化)
         //todo 进行打乱的歌单的持久化
         binding.shuffleBtn.setOnLongClickListener {
@@ -220,83 +243,20 @@ class MainActivity : AppCompatActivity() {
         //排序的偏好
         val sortEditor = getSharedPreferences("SORTING", MODE_PRIVATE)
         sortOrder = sortEditor.getInt("sortOrder", 0)
-        //扫描得到歌单
-//        MusicListMA = getAllAudio()
-        MusicListMAX = getAllAudioX(this)
 
-        // 设置 RecyclerView 的固定大小以及缓存的项数，以优化性能
+        MusicListMAX = getAllAudioX(this)
         binding.musicRV.setHasFixedSize(true)
         binding.musicRV.setItemViewCacheSize(13)
-        // 设置 RecyclerView 的布局管理器为线性布局管理器
         binding.musicRV.layoutManager = LinearLayoutManager(this@MainActivity)
-        // 创建 MusicAdapter 实例，并传入 MainActivity 和音乐列表作为参数
-//        musicAdapter = MusicAdapter(this@MainActivity, MusicListMA)
         musicAdapterX = MusicAdapterX(this@MainActivity, MusicListMAX)
 
-
-        // 将 musicAdapter 设置为 musicRV 的适配器
         binding.musicRV.adapter = musicAdapterX
     }
 
-    //获取音乐列表的函数,查询本地音乐并且返回一个列表
-    @SuppressLint("Recycle", "Range")
-    @RequiresApi(Build.VERSION_CODES.R)
-    private fun getAllAudio(): ArrayList<Music> {
-        val tempList = ArrayList<Music>()
-        //这是一个筛选条件，表示只查询音乐文件
-        val selection =
-            MediaStore.Audio.Media.IS_MUSIC + "!=0 AND " + MediaStore.Audio.Media.DURATION + ">20000"
-
-        // 创建一个包含需要查询的媒体库音乐信息的投影数组
-        val projection = arrayOf(
-            MediaStore.Audio.Media._ID, // 音乐文件ID
-            MediaStore.Audio.Media.TITLE, // 音乐标题
-            MediaStore.Audio.Media.ALBUM, // 音乐专辑
-            MediaStore.Audio.Media.ARTIST, // 音乐艺术家
-            MediaStore.Audio.Media.DURATION, // 音乐时长
-            MediaStore.Audio.Media.DATE_ADDED, // 音乐添加日期
-            MediaStore.Audio.Media.DATA, // 音乐文件路径
-            MediaStore.Audio.Media.ALBUM_ID // 音乐文件路径
-        )
-        val cursor = this.contentResolver.query(
-            MediaStore.Audio.Media.EXTERNAL_CONTENT_URI, projection,
-            selection, null, sortingList[sortOrder], null
-        )
-        if (cursor != null) {
-            if (cursor.moveToFirst()) {
-                do {
-                    val id =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media._ID))
-                    val title =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.TITLE))
-                    val album =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM))
-                    val artist =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ARTIST))
-                    val duration =
-                        cursor.getLong(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION))
-                    val path =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA))
-                    val albumIdC =
-                        cursor.getString(cursor.getColumnIndexOrThrow(MediaStore.Audio.Media.ALBUM_ID))
-                    val uri = Uri.parse("content://media/external/audio/albumart")
-                    //通过album_id找到专辑封面图片uri
-                    val artUriC = Uri.withAppendedPath(uri, albumIdC).toString()
-                    val music = Music(id, title, album, artist, duration, path, artUriC)
-                    val file = File(path)
-                    if (file.exists()) {
-                        tempList.add(music)
-                    }
-                } while (cursor.moveToNext())
-                cursor.close()
-            }
-        }
-        return tempList
-    }
 
     override fun onDestroy() {
         super.onDestroy()
-        if (!isPlaying && musicService != null) {
+        if (!isPlaying.value!! && musicService != null) {
             exitApplication()
         }
     }
@@ -304,7 +264,6 @@ class MainActivity : AppCompatActivity() {
     @RequiresApi(Build.VERSION_CODES.R)
     override fun onResume() {
         super.onResume()
-
         //存储我喜欢的歌
         val editor = getSharedPreferences("FAVOURITES", MODE_PRIVATE).edit()
         val jsonString = GsonBuilder().create().toJson(FavouriteActivity.favouriteSongs)
@@ -343,6 +302,42 @@ class MainActivity : AppCompatActivity() {
             }
         })
         return super.onCreateOptionsMenu(menu)
+    }
+
+    private fun startServicex(
+        playlist: ArrayList<StandardSongData>,
+        shuffle: Boolean,
+        position: Int
+    ) {
+        val intent = Intent(this, MusicService::class.java)
+        this.bindService(intent, this, BIND_AUTO_CREATE)
+        this.startService(intent)
+        musicListPA = ArrayList()
+        musicListPA.addAll(playlist)
+        songPosition = position
+        if (shuffle) musicListPA.shuffle()
+    }
+
+    override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
+        GlobalScope.launch(Dispatchers.Main) {
+            if (musicService == null) {
+                val binder = service as MusicService.MyBinder
+                musicService = binder.currentService()
+                musicService!!.audioManager =
+                    this@MainActivity.getSystemService(AUDIO_SERVICE) as AudioManager
+                musicService!!.audioManager.requestAudioFocus(
+                    musicService,
+                    AudioManager.STREAM_MUSIC,
+                    AudioManager.AUDIOFOCUS_GAIN
+                )
+            }
+            PlayMusic().createMediaPlayer(musicListPA[songPosition])
+//            musicService!!.seekBarSetup()
+        }
+    }
+
+    override fun onServiceDisconnected(p0: ComponentName?) {
+        musicService = null
     }
 
 }

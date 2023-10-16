@@ -186,7 +186,7 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
             //把播放界面装载
             PlayerActivity.binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-            showNotification(R.drawable.ic_pause, 1F)
+//            showNotification(R.drawable.ic_pause, 1F)
             PlayerActivity.binding.tvSeekBarStart.text =
                 formatDuration(mediaPlayer!!.currentPosition.toLong())
             PlayerActivity.binding.tvSeekBarEnd.text =
@@ -212,19 +212,10 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
 
     override fun onAudioFocusChange(focusChange: Int) {
         if (focusChange <= 0) {
-            //暂停音乐
-            PlayerActivity.binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
-            NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.play_icon)
-            isPlaying = false
+            isPlaying.value = false
             mediaPlayer!!.pause()
-            showNotification(R.drawable.play_icon, 0F)
-
         } else {
-            //继续音乐
-            PlayerActivity.binding.playPauseBtnPA.setBackgroundResource(R.drawable.ic_pause)
-            NowPlaying.binding.playPauseBtnNP.setImageResource(R.drawable.pause_icon)
-            showNotification(R.drawable.pause_icon, 1F)
-            isPlaying = true
+            isPlaying.value = true
             mediaPlayer!!.start()
         }
 
@@ -234,8 +225,6 @@ class MusicService : Service(), AudioManager.OnAudioFocusChangeListener {
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         return START_STICKY
     }
-
-
 }
 
 suspend fun main() {

@@ -19,8 +19,7 @@ class MusicApplication: Application() {
         const val NEXT = "next"
         const val PREVIOUS = "previous"
         const val EXIT = "exit"
-
-        var musicService = MutableLiveData<MusicService>()
+        var musicController = MutableLiveData<PlayMusic?>()
     }
 
 

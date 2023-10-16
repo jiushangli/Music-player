@@ -1,10 +1,12 @@
 package com.example.m5.ui.activity
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
+import com.example.m5.activity.FavouriteActivity
 import com.example.m5.activity.MainActivity
 import com.example.m5.databinding.ActivityNetEaseMainBinding
 import com.example.m5.ui.frag.NeteaseBrowse
@@ -23,6 +25,7 @@ class NetEaseMainActivity : AppCompatActivity() {
     companion object {
         var install: NetEaseMainActivity? = null
     }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -51,7 +54,7 @@ class NetEaseMainActivity : AppCompatActivity() {
                 return when (position) {
                     0 -> NeteaseMine()
                     1 -> RecommendMusic()
-                    2 ->NeteaseBrowse()
+                    2 -> NeteaseBrowse()
                     3 -> SearchMusic()
                     else -> SearchMusic()
                 }
@@ -61,5 +64,10 @@ class NetEaseMainActivity : AppCompatActivity() {
         viewModel.netEasePage.observe(this) {
             binding.viewPager2.setCurrentItem(it, false)
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
     }
 }

@@ -34,7 +34,7 @@
         app:layout_constraintTop_toTopOf="parent">
     </androidx.viewpager2.widget.ViewPager2>
 
-    <androidx.fragment.app.FragmentContainerView
+<!--    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/nowPlaying"
         android:name="com.example.m5.frag.NowPlaying"
         android:layout_width="match_parent"
@@ -44,6 +44,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout="@layout/fragment_now_playing" />
+        tools:layout="@layout/fragment_now_playing" />-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

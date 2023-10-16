@@ -2,7 +2,7 @@ package com.example.m5.util
 
 import android.media.MediaPlayer
 import android.util.Log
-import com.example.m5.R
+import androidx.lifecycle.MutableLiveData
 import com.example.m5.activity.PlayerActivity.Companion.nowPlayingId
 import com.example.m5.data.SOURCE_LOCAL
 import com.example.m5.data.StandardSongData
@@ -14,19 +14,24 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import com.example.m5.util.setSongPosition
 
 
 open class PlayMusic : MediaPlayer.OnCompletionListener {
 
     companion object {
-        //?的含义是可以为空,!的含义是非空断言,!!的含义是非空断言,如果为空就抛出异常
         var musicService: MusicService? = null
-        var isPlaying: Boolean = false
+        var isPlaying= MutableLiveData(false)
+        var songData = MutableLiveData<StandardSongData?>()
     }
+
+    fun getPlayingSongData(): MutableLiveData<StandardSongData?> = songData
 
     suspend fun createMediaPlayer(song: StandardSongData) {
         try {
+            songData.value = song
+
+            Log.d("yqhy", getPlayingSongData().value.toString())
+
             // 如果为空就创建一个,在什么时候为空呢,在第一次进入的时候为空
             if (musicService!!.mediaPlayer == null) musicService!!.mediaPlayer =
                 MediaPlayer()
@@ -46,20 +51,17 @@ open class PlayMusic : MediaPlayer.OnCompletionListener {
                     }
                 }
             }
-            // 回到主线程
-
-            Log.d("yqhy", "返回内容${songUrl}")
-            Log.d("yqhy", "音乐的id : ${song.id}")
 
             musicService!!.mediaPlayer!!.setDataSource(songUrl)
             musicService!!.mediaPlayer!!.prepare()
             musicService!!.mediaPlayer!!.start()
             // ... 其他 UI 更新操作 ...
-            isPlaying = true
+            isPlaying.value = true
             //替换播放按钮
-            musicService!!.showNotification(R.drawable.ic_pause, 1F)
+//            musicService!!.showNotification(R.drawable.ic_pause, 1F)
             musicService!!.mediaPlayer!!.setOnCompletionListener(this)
             nowPlayingId = musicListPA[songPosition].id!!
+
 
         } catch (e: Exception) {
             e.printStackTrace()
@@ -71,6 +73,5 @@ open class PlayMusic : MediaPlayer.OnCompletionListener {
             setSongPosition(increment = true)
             createMediaPlayer(musicListPA[songPosition])
         }
-
     }
 }

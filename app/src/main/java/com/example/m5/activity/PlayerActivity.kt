@@ -81,7 +81,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
 
         //绑定播放按钮
         binding.playPauseBtnPA.setOnClickListener {
-            if (isPlaying) {
+            if (isPlaying.value!!) {
                 pauseMusic()
             } else {
                 playMusic()
@@ -234,7 +234,7 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
             formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
         binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
         binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-        if (isPlaying) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
+        if (isPlaying.value!!) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
         else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
         musicService!!.seekBarSetup()
 
@@ -243,14 +243,14 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     private fun playMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
 //        musicService!!.showNotification(R.drawable.ic_pause, 1F)
-        isPlaying = true
+        isPlaying.value = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
         binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
 //        musicService!!.showNotification(R.drawable.play_icon, 0F)
-        isPlaying = false
+        isPlaying.value = false
         musicService!!.mediaPlayer!!.pause()
     }
 

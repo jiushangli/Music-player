@@ -12,7 +12,6 @@ class SearchViewModel: ViewModel() {
 
     private val searchLiveData = MutableLiveData<String>()
     var searchSongs =  ArrayList<StandardSongData>()
-    var postion: Int = 0
 
     val musicLiveData = Transformations.switchMap(searchLiveData){ query->
         Repository.searchMusic(query)
