@@ -21,6 +21,7 @@ import com.example.m5.data.musicListPA
 import com.example.m5.data.repeatPlay
 import com.example.m5.data.songPosition
 import com.example.m5.databinding.ActivityPlayerBinding
+import com.example.m5.frag.NowPlaying
 import com.example.m5.util.PlayMusic
 import com.example.m5.util.PlayMusic.Companion.isPlaying
 import com.example.m5.util.PlayMusic.Companion.musicService
@@ -59,21 +60,24 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         transparentStatusBar(window)
         setStatusBarTextColor(window, false)
 
-        if (intent.data?.scheme.contentEquals("content")) {
-
-            musicListPA = ArrayList()
-
-            musicListPA.add(getMusicDetails(intent.data!!))
-
+        //界面填充
+        PlayMusic.songData.observe(this) {
             Glide.with(this)
-                .load(musicListPA[songPosition].imageUrl?.let { getImgArt(it) })
-                .apply(RequestOptions().placeholder(R.drawable.moni1).centerCrop())
+                .load(it?.imageUrl)
+                .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
                 .into(binding.songImgPA)
-            binding.songNamePA.text = musicListPA[songPosition].name
-            binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
-        } else
+            binding.songNamePA.text = it?.name
+            binding.artistPA.text = it?.artists?.get(0)?.name
+            setLayout()
+        }
 
-            initializeLayout()
+        isPlaying.observe(this) {
+            if (it) {
+                binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
+            } else {
+                binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
+            }
+        }
 
         binding.navPA.setOnClickListener {
             showItemSelectDialog(this@PlayerActivity, position = songPosition)
@@ -175,81 +179,32 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         }
     }
 
-    private fun getMusicDetails(contentUri: Uri): StandardSongData {
-        var cursor: Cursor? = null
-        try {
-            val projection = arrayOf(MediaStore.Audio.Media.DATA, MediaStore.Audio.Media.DURATION)
-            cursor = this.contentResolver.query(contentUri, projection, null, null, null)
-            val dataColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DATA)
-            val durationColumn = cursor?.getColumnIndexOrThrow(MediaStore.Audio.Media.DURATION)
-            cursor!!.moveToFirst()
-            val path = dataColumn?.let { cursor.getString(it) }
-            val duration = durationColumn?.let { cursor.getLong(it) }
-            val artistList = ArrayList<StandardSongData.StandardArtistData>()
-            artistList.add(
-                StandardSongData.StandardArtistData(
-                    null,
-                    "artist"
-                )
-            )
-
-            return StandardSongData(
-                SOURCE_LOCAL,
-                id = "Unknown",
-                name = path.toString(),
-                imageUrl = "artUriC",
-                artistList,
-                null,
-                StandardSongData.LocalInfo(duration = duration!!, path = path),
-                null
-            )
-        } finally {
-        }
-    }
-
     //填充界面的图片以及歌曲名称
     private fun setLayout() {
 
+        //找到当前音乐在favourite中的位置
         fIndex = musicListPA[songPosition].id?.let { favouriteChecker(it) }!!
-        Glide.with(this)
-            .load(musicListPA[songPosition].imageUrl)
-            .apply(RequestOptions().placeholder(R.drawable.yqhy).centerCrop())
-            .into(binding.songImgPA)
-        binding.songNamePA.text = musicListPA[songPosition].name
-        binding.artistPA.text = musicListPA[songPosition].artists?.get(0)?.name
         if (repeatPlay) binding.repeatBtnPA.setImageResource(R.drawable.repeat_one_icon)
         else binding.repeatBtnPA.setImageResource(R.drawable.repeat_icon)
         if (min15 || min30 || min60)
             binding.timerBtnPA.setColorFilter(ContextCompat.getColor(this, R.color.bordeaux_red))
         if (isFavourite) binding.favouriteBtnPA.setImageResource(R.drawable.favourite_icon)
         else binding.favouriteBtnPA.setImageResource(R.drawable.favourite_empty_icon)
-    }
-
-    private fun initializeLayout() {
-
-        setLayout()
         binding.tvSeekBarStart.text =
             formatDuration(musicService!!.mediaPlayer!!.currentPosition.toLong())
         binding.tvSeekBarEnd.text =
             formatDuration(musicService!!.mediaPlayer!!.duration.toLong())
         binding.seekBarPA.progress = musicService!!.mediaPlayer!!.currentPosition
         binding.seekBarPA.max = musicService!!.mediaPlayer!!.duration
-        if (isPlaying.value!!) binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-        else binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
         musicService!!.seekBarSetup()
-
     }
 
     private fun playMusic() {
-        binding.playPauseBtnPA.setImageResource(R.drawable.ic_pause)
-//        musicService!!.showNotification(R.drawable.ic_pause, 1F)
         isPlaying.value = true
         musicService!!.mediaPlayer!!.start()
     }
 
     private fun pauseMusic() {
-        binding.playPauseBtnPA.setImageResource(R.drawable.play_icon)
-//        musicService!!.showNotification(R.drawable.play_icon, 0F)
         isPlaying.value = false
         musicService!!.mediaPlayer!!.pause()
     }
@@ -257,11 +212,10 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
     private suspend fun preNextSong(increment: Boolean) {
         if (increment) {
             setSongPosition(increment = true)
-            setLayout()
+
             PlayMusic().createMediaPlayer(musicListPA[songPosition])
         } else {
             setSongPosition(increment = false)
-            setLayout()
             PlayMusic().createMediaPlayer(musicListPA[songPosition])
         }
     }
@@ -271,11 +225,6 @@ class PlayerActivity : AppCompatActivity(), MediaPlayer.OnCompletionListener {
         GlobalScope.launch(Dispatchers.IO) {
             setSongPosition(increment = true)
             PlayMusic().createMediaPlayer(musicListPA[songPosition])
-            try {
-                setLayout()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
         }
     }
 
